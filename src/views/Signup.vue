@@ -1,13 +1,14 @@
 <template>
-
-  <v-container class="content">
+  <v-container fluid grid-list-xl text-xs-center class="mt-1 pt-5">
     <v-layout row v-if="error">
-      <v-flex xs12 sm6 offset-sm3>
-        <app-alert @dismissed="onDismissed" :text="error.message"></app-alert>
+      <v-flex xs10  offset-xs1 sm4 offset-sm4 md4 offset-md4>
+        <v-alert dismissible type="error" @click="onClear">{{
+          error.message
+        }}</v-alert>
       </v-flex>
     </v-layout>
     <v-layout row>
-      <v-flex xs12 sm6 offset-sm3>
+      <v-flex xs10  offset-xs1 sm4 offset-sm4 md4 offset-md4>
         <v-card>
           <v-card-text>
             <v-container>
@@ -62,12 +63,21 @@
                       v-model="confirmPassword"
                       type="password"
                       :rules="[comparePasswords]"
+                      required
                     ></v-text-field>
                   </v-flex>
                 </v-layout>
                 <v-layout row>
-                  <v-flex xs12>
-                    <v-btn type="submit" :loading="loading" :disabled="loading">
+                  <v-flex xs6 class="button">
+                    <v-btn block @click="onBack">Back</v-btn>
+                  </v-flex>
+                  <v-flex xs6 class="button">
+                    <v-btn
+                      block
+                      type="submit"
+                      :disabled="loading"
+                      :loading="loading"
+                    >
                       Sign up
                       <template v-slot:loader>
                         <span class="custom-loader">
@@ -98,7 +108,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["currentUser", "error", "loading"]),
+    ...mapGetters(["error", "loading", "user"]),
     comparePasswords() {
       return this.password !== this.confirmPassword
         ? "Passwords do not match"
@@ -107,24 +117,29 @@ export default {
   },
 
   watch: {
-    currentUser(value) {
+    user(value) {
       if (value !== null && value !== undefined) {
-        this.$store.commit("setUser",this.currentUser)
-        this.$router.replace("/user");
+        this.$router.replace("/request");
       }
     }
   },
 
   methods: {
     onSignup() {
-      this.$store.dispatch({
-        type: "signUserUp",
-        email: this.email,
-        username: this.username,
-        password: this.password
-      });
+      if (this.comparePasswords === true) {
+        this.$store.dispatch({
+          type: "signUp",
+          email: this.email,
+          username: this.username,
+          password: this.password
+        });
+      }
     },
-    onDismissed() {
+    onBack() {
+      this.onClear();
+      this.$router.replace("/");
+    },
+    onClear() {
       this.$store.dispatch("clearError");
     }
   }
@@ -132,22 +147,23 @@ export default {
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css?family=Grand+Hotel&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Open+Sans|Roboto+Slab&display=swap");
 
 .content {
-   margin-top: 20%;
+  margin-top: 20%;
 }
 
 h1 {
   text-align: center;
   color: black;
-  font-family: "Grand Hotel", cursive;
-  font-size: 75px;
+  font-family: "Roboto Slab", serif;
+  font-size: 40px;
 }
 .custom-loader {
   animation: loader 1s infinite;
   display: flex;
 }
+
 @-moz-keyframes loader {
   from {
     transform: rotate(0);

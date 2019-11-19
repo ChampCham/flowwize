@@ -1,31 +1,27 @@
 <template>
-      <v-container fluid bg grid-list-xl text-xs-center class="m-auto mt-12 pt-5">
-        <v-layout row v-if="error">
-          <v-flex xs10  offset-xs1 sm4 offset-sm4 md4 offset-md4 lg4 offset-lg4>
-            <v-alert dismissible type="error" @click="onDismissed">{{
-              error.message
-            }}</v-alert>
-          </v-flex>
-        </v-layout>
-        <v-layout row >
+  <div>
+    <Header />
+    <v-content class="content">
+      <v-container fluid grid-list-xl text-xs-center class="m-auto pt-5">
+        <v-layout row>
           <v-flex xs10  offset-xs1 sm4 offset-sm4 md4 offset-md4 lg4 offset-lg4>
             <v-card>
               <v-card-text>
                 <v-container>
                   <v-layout row>
                     <v-flex xs12>
-                      <h1>Login</h1>
+                      <h1>Loan Request</h1>
                     </v-flex>
                   </v-layout>
                   <form>
                     <v-layout row>
                       <v-flex xs12>
                         <v-text-field
-                          name="email"
-                          label="Mail"
-                          id="email"
-                          v-model="email"
-                          type="email"
+                          name="type"
+                          label="Type"
+                          id="type"
+                          v-model="type"
+                          type="text"
                           required
                         ></v-text-field>
                       </v-flex>
@@ -33,33 +29,19 @@
                     <v-layout row>
                       <v-flex xs12>
                         <v-text-field
-                          name="password"
-                          label="Password"
-                          id="password"
-                          v-model="password"
-                          type="password"
+                          name="amount"
+                          label="Amount"
+                          id="amount"
+                          v-model="amount"
+                          type="text"
                           required
                         ></v-text-field>
                       </v-flex>
                     </v-layout>
                     <v-layout row>
-                      <v-flex xs6>
-                        <v-btn block type="submit" @click="signup">
-                          Register
-                          <span slot="loader" class="custom-loader">
-                            <v-icon light>fas fa-spinner</v-icon>
-                          </span>
-                        </v-btn>
-                      </v-flex>
-                      <v-flex xs6>
-                        <v-btn
-                          block
-                          @click="login"
-                          type="submit"
-                          :disabled="loading"
-                          :loading="loading"
-                        >
-                          Log in
+                      <v-flex xs12>
+                        <v-btn block @click="submit" type="submit">
+                          Submit
                           <span slot="loader" class="custom-loader">
                             <v-icon light>fas fa-spinner</v-icon>
                           </span>
@@ -73,64 +55,42 @@
           </v-flex>
         </v-layout>
       </v-container>
-
+    </v-content>
+  </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import Header from "@/components/Header";
 export default {
+  components: {
+    Header
+  },
   data() {
     return {
-      email: "",
-      password: ""
+      type: "",
+      amount: ""
     };
   },
-  computed: {
-    ...mapGetters(["error", "loading"])
-  },
   methods: {
-    login() {
-      this.loading = true;
-      this.$store
-        .dispatch("logIn", {
-          email: this.email,
-          password: this.password
-        })
-        .then(() => {
-          if (this.error === null) {
-               this.onClear();
-            this.$router.push({ path: "/request" });
-          }
-          this.loading = false;
-        });
-    },
-    signInGoogle() {
-      this.$store.dispatch("signUserInWithGoogle").then(() => {
-        if (this.error === null) {
-          this.onClear();
-          this.$router.push({ path: "/" });
-        }
-      });
-    },
-    signup() {
-      this.$router.push({ path: "/signup" });
-    },
-    onClear() {
-      this.$store.dispatch("clearError");
+    submit() {
+      console.log("Submit");
     }
   }
 };
 </script>
 <style scoped>
 @import url("https://fonts.googleapis.com/css?family=Open+Sans|Roboto+Slab&display=swap");
-/* .bg {
+.bg {
   background-image: url("/img/login_bg.png");
   background-size: cover;
-} */
+}
+.content {
+  margin-top: 20%;
+}
 h1 {
   text-align: center;
   color: black;
   font-family: "Roboto Slab", serif;
-  font-size: 40px;
+  font-size: 35px;
 }
 p {
   margin-top: 40px;
