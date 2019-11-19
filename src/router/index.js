@@ -6,7 +6,8 @@ const Signup = () => import("@/views/Signup");
 const Header = () => import("@/components/Header");
 const LoanRequest = () => import("@/views/LoanRequest");
 const Requests = () => import("@/views/Requests");
-
+const Offers = () => import("@/views/Offers");
+const Upload = () => import("@/views/Upload");
 Vue.use(VueRouter);
 
 const routes = [
@@ -50,6 +51,22 @@ const routes = [
     path: "/requests",
     name: "Requests",
     component: Requests,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/offers",
+    name: "Offers",
+    component: Offers,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/upload",
+    name: "Upload",
+    component: Upload,
     meta: {
       requiresAuth: true
     }

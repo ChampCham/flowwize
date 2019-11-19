@@ -8,7 +8,7 @@
       </v-flex>
     </v-layout>
     <v-layout row>
-      <v-flex xs10  offset-xs1 sm4 offset-sm4 md4 offset-md4>
+      <v-flex xs12   sm4 offset-sm4 md4 offset-md4>
         <v-card>
           <v-card-text>
             <v-container>

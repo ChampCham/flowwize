@@ -1,12 +1,8 @@
 <template>
   <div>
-    <v-navigation-drawer v-model="sidebar" app>
+    <v-navigation-drawer v-model="sidebar" temporary left hide-overlay fixed>
       <v-list>
-        <v-list-item
-          v-for="item in menuItems"
-          :key="item.title"
-          :to="item.path"
-        >
+        <v-list-item v-for="item in menuItems" :key="item.title" :to="item.path">
           <v-list-item-action>
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-action>
@@ -27,9 +23,11 @@
         <v-app-bar-nav-icon @click="sidebar = !sidebar"></v-app-bar-nav-icon>
       </span>
       <v-toolbar-title>
-        <router-link to="/" tag="span" style="cursor: pointer">{{
+        <router-link to="/" tag="span" style="cursor: pointer">
+          {{
           appTitle
-        }}</router-link>
+          }}
+        </router-link>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items class="hidden-xs-only">
@@ -53,9 +51,10 @@ export default {
       appTitle: "Flowwize",
       sidebar: false,
       menuItems: [
-        { title: "My Request", path: "/request", icon: "fas fa-users" },
-        { title: "My Offer", path: "/request", icon: "fas fa-users" },
-        { title: "Upload", path: "/request", icon: "fas fa-users" }
+        { title: "Loan Request", path: "/request", icon: "fas fa-users" },
+        { title: "My Request", path: "/requests", icon: "fas fa-users" },
+        { title: "My Offer", path: "/offers", icon: "fas fa-users" },
+        { title: "Upload", path: "/upload", icon: "fas fa-users" }
       ]
     };
   },

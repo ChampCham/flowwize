@@ -9,7 +9,7 @@
                 <v-container>
                   <v-layout row>
                     <v-flex xs12>
-                      <h1>Loan Request</h1>
+                      <h1>Upload</h1>
                     </v-flex>
                   </v-layout>
                   <form>
