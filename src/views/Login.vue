@@ -44,7 +44,7 @@
                 </v-layout>
                 <v-layout row>
                   <v-flex xs6>
-                    <v-btn block type="submit" @click="signup">
+                    <v-btn block @click="signup">
                       Register
                       <span slot="loader" class="custom-loader">
                         <v-icon light>fas fa-spinner</v-icon>
@@ -55,7 +55,6 @@
                     <v-btn
                       block
                       @click="login"
-                      type="submit"
                       :disabled="loading"
                       :loading="loading"
                     >

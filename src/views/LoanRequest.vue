@@ -39,12 +39,15 @@
                   </v-layout>
                   <v-layout row>
                     <v-flex xs12>
-                      <v-btn block @click="submit" type="submit">
+                      <v-btn block @click="submit">
                         Submit
                         <span slot="loader" class="custom-loader">
                           <v-icon light>fas fa-spinner</v-icon>
                         </span>
                       </v-btn>
+                      <v-btn block @click="regisRequester"
+                        >Register Requester</v-btn
+                      >
                     </v-flex>
                   </v-layout>
                 </form>
@@ -58,6 +61,8 @@
 </template>
 <script>
 import Header from "@/components/Header";
+import { requestLoan, registerRequester } from "../plugins/getWeb3";
+
 export default {
   components: {
     Header
@@ -69,8 +74,17 @@ export default {
     };
   },
   methods: {
+    regisRequester() {
+      registerRequester(this.$store.getters.user.wallet.address);
+    },
     submit() {
-      console.log("Submit");
+      requestLoan(
+        this.$store.getters.user.wallet.address,
+        this.type,
+        this.amount
+      );
+      this.type = "";
+      this.amount = "";
     }
   }
 };
