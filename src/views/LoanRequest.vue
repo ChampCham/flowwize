@@ -1,59 +1,59 @@
 <template>
   <div>
     <Header />
-      <v-container fluid grid-list-xl text-xs-center class="mt-12 pt-5">
-        <v-layout row>
-          <v-flex xs10  offset-xs1 sm4 offset-sm4 md4 offset-md4 lg4 offset-lg4>
-            <v-card>
-              <v-card-text>
-                <v-container>
+    <v-container fluid grid-list-xl text-xs-center class="mt-12 pt-5">
+      <v-layout row>
+        <v-flex xs10 offset-xs1 sm4 offset-sm4 md4 offset-md4 lg4 offset-lg4>
+          <v-card>
+            <v-card-text>
+              <v-container>
+                <v-layout row>
+                  <v-flex xs12>
+                    <h1>Loan Request</h1>
+                  </v-flex>
+                </v-layout>
+                <form>
                   <v-layout row>
                     <v-flex xs12>
-                      <h1>Loan Request</h1>
+                      <v-text-field
+                        name="type"
+                        label="Type"
+                        id="type"
+                        v-model="type"
+                        type="text"
+                        required
+                      ></v-text-field>
                     </v-flex>
                   </v-layout>
-                  <form>
-                    <v-layout row>
-                      <v-flex xs12>
-                        <v-text-field
-                          name="type"
-                          label="Type"
-                          id="type"
-                          v-model="type"
-                          type="text"
-                          required
-                        ></v-text-field>
-                      </v-flex>
-                    </v-layout>
-                    <v-layout row>
-                      <v-flex xs12>
-                        <v-text-field
-                          name="amount"
-                          label="Amount"
-                          id="amount"
-                          v-model="amount"
-                          type="text"
-                          required
-                        ></v-text-field>
-                      </v-flex>
-                    </v-layout>
-                    <v-layout row>
-                      <v-flex xs12>
-                        <v-btn block @click="submit" type="submit">
-                          Submit
-                          <span slot="loader" class="custom-loader">
-                            <v-icon light>fas fa-spinner</v-icon>
-                          </span>
-                        </v-btn>
-                      </v-flex>
-                    </v-layout>
-                  </form>
-                </v-container>
-              </v-card-text>
-            </v-card>
-          </v-flex>
-        </v-layout>
-      </v-container>
+                  <v-layout row>
+                    <v-flex xs12>
+                      <v-text-field
+                        name="amount"
+                        label="Amount"
+                        id="amount"
+                        v-model="amount"
+                        type="text"
+                        required
+                      ></v-text-field>
+                    </v-flex>
+                  </v-layout>
+                  <v-layout row>
+                    <v-flex xs12>
+                      <v-btn block @click="submit" type="submit">
+                        Submit
+                        <span slot="loader" class="custom-loader">
+                          <v-icon light>fas fa-spinner</v-icon>
+                        </span>
+                      </v-btn>
+                    </v-flex>
+                  </v-layout>
+                </form>
+              </v-container>
+            </v-card-text>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </v-container>
   </div>
 </template>
 <script>
