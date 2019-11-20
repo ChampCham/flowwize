@@ -1,7 +1,9 @@
 import Web3 from "web3";
 
-const httpProvider =
-  "https://rinkeby.infura.io/v3/230cd6eacddf44d6b6307c70164a1636";
+// const httpProvider =
+//   "https://rinkeby.infura.io/v3/230cd6eacddf44d6b6307c70164a1636";
+
+const httpProvider = "http://127.0.0.1:7545";
 
 export const createWallet = () => {
   if (Web3) {
