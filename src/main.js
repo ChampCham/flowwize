@@ -13,7 +13,6 @@ Vue.use(VueFirestore, {
 });
 Vue.prototype.$firebase = fb;
 Vue.prototype.$database = db;
-
 let app = null;
 //To make sure that auth ready
 fb.auth().onAuthStateChanged(user => {
