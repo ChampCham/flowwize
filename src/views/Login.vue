@@ -2,9 +2,9 @@
   <v-container fluid bg grid-list-xl text-xs-center class="m-auto mt-12 pt-5">
     <v-layout row v-if="error">
       <v-flex xs10 offset-xs1 sm4 offset-sm4 md4 offset-md4 lg4 offset-lg4>
-        <v-alert dismissible type="error" @click="onDismissed">
-          {{ error.message }}
-        </v-alert>
+        <v-alert dismissible type="error" @click="onClear">{{
+          error.message
+        }}</v-alert>
       </v-flex>
     </v-layout>
     <v-layout row>
@@ -18,68 +18,33 @@
                 </v-flex>
               </v-layout>
               <form>
-                <v-tabs
-                  v-model="tab"
-                  fixed-tabs
-                  background-color="#ffffff"
-                  icons-and-text
-                  color="black"
-                  class="tabs"
-                >
-                  <v-tabs-slider></v-tabs-slider>
-                  <v-tab href="#tab-1">
-                    <div class="hidden-sm-and-down">User</div>
-                    <v-icon>fas fa-user</v-icon>
-                  </v-tab>
-                  <v-tab href="#tab-2">
-                    <div class="hidden-sm-and-down">Bank</div>
-                    <v-icon>fas fa-university</v-icon>
-                  </v-tab>
-                </v-tabs>
-
-                <v-tabs-items v-model="tab">
-                  <v-tab-item v-for="i in 2" :key="i" :value="'tab-' + i">
-                    <div>
-                      <v-layout row>
-                        <v-flex xs12>
-                          <v-text-field
-                            v-if="i == '1'"
-                            name="email"
-                            label="User Mail"
-                            id="email"
-                            v-model="email"
-                            type="email"
-                            required
-                          ></v-text-field>
-                          <v-text-field
-                            v-if="i == '2'"
-                            name="email"
-                            label="Bank Mail"
-                            id="email"
-                            v-model="email"
-                            type="email"
-                            required
-                          ></v-text-field>
-                        </v-flex>
-                      </v-layout>
-                      <v-layout row>
-                        <v-flex xs12>
-                          <v-text-field
-                            name="password"
-                            label="Password"
-                            id="password"
-                            v-model="password"
-                            type="password"
-                            required
-                          ></v-text-field>
-                        </v-flex>
-                      </v-layout>
-                    </div>
-                  </v-tab-item>
-                </v-tabs-items>
+                <v-layout row>
+                  <v-flex xs12>
+                    <v-text-field
+                      name="email"
+                      label="Mail"
+                      id="email"
+                      v-model="email"
+                      type="email"
+                      required
+                    ></v-text-field>
+                  </v-flex>
+                </v-layout>
+                <v-layout row>
+                  <v-flex xs12>
+                    <v-text-field
+                      name="password"
+                      label="Password"
+                      id="password"
+                      v-model="password"
+                      type="password"
+                      required
+                    ></v-text-field>
+                  </v-flex>
+                </v-layout>
                 <v-layout row>
                   <v-flex xs6>
-                    <v-btn block type="submit" @click="signup">
+                    <v-btn block @click="signup">
                       Register
                       <span slot="loader" class="custom-loader">
                         <v-icon light>fas fa-spinner</v-icon>
@@ -90,7 +55,6 @@
                     <v-btn
                       block
                       @click="login"
-                      type="submit"
                       :disabled="loading"
                       :loading="loading"
                     >

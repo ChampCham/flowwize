@@ -101,6 +101,7 @@ import { mapGetters } from "vuex";
 export default {
   data() {
     return {
+      loading: false,
       email: "",
       username: "",
       password: "",

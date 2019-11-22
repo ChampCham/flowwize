@@ -83,7 +83,6 @@ router.beforeEach((to, from, next) => {
   const currentUser = fb.auth().currentUser;
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
   const requiresGuest = to.matched.some(record => record.meta.requiresGuest);
-  console.log(currentUser);
   if (requiresAuth) {
     if (!currentUser) {
       next({
