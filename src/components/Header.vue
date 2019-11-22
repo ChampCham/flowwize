@@ -48,17 +48,38 @@
 <script>
 export default {
   name: "App",
+  props: {
+    role: String
+  },
   data() {
     return {
       appTitle: "Flowwize",
-      sidebar: false,
-      menuItems: [
-        { title: "Loan Request", path: "/request", icon: "fas fa-users" },
-        { title: "My Request", path: "/requests", icon: "fas fa-users" },
-        { title: "My Offer", path: "/offers", icon: "fas fa-users" },
-        { title: "Upload", path: "/upload", icon: "fas fa-users" }
-      ]
+      sidebar: false
     };
+  },
+  computed: {
+    menuItems() {
+      if (this.role === "user") {
+        return [
+          { title: "Loan Request", path: "/request", icon: "fas fa-users" },
+          { title: "My Request", path: "/requests", icon: "fas fa-users" },
+          { title: "My Offer", path: "/offers", icon: "fas fa-users" },
+          { title: "Upload", path: "/upload", icon: "fas fa-users" }
+        ];
+      }
+      if (this.role === "bank") {
+        return [
+          { title: "Loan Request", path: "/bankRequest", icon: "fas fa-users" },
+          {
+            title: "Document Request",
+            path: "/documentRequest",
+            icon: "fas fa-users"
+          },
+          { title: "My Offer", path: "/bankOffer", icon: "fas fa-users" }
+        ];
+      }
+      return null;
+    }
   },
   methods: {
     logOut() {

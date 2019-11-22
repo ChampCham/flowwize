@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <Header />
+  <v-card>
+    <Header :role="role" />
     <v-container>
       <v-form ref="form" v-model="valid" lazy-validation>
         <v-text-field
@@ -30,7 +30,7 @@
         <v-checkbox v-model="document" label="Document 3" required></v-checkbox>
       </v-form>
     </v-container>
-  </div>
+  </v-card>
 </template>
 <script>
 import Header from "@/components/Header";
@@ -46,7 +46,8 @@ export default {
     amountRules: [v => !!v || "Amount is required"],
     select: null,
     BankNames: ["Bank 1", "Bank 2", "Bank 3", "Bank 4"],
-    document: false
+    document: false,
+    role: "bank"
   }),
 
   methods: {

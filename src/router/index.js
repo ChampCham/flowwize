@@ -9,7 +9,9 @@ const LoanRequest = () => import("@/views/LoanRequest");
 const Requests = () => import("@/views/Requests");
 const Offers = () => import("@/views/Offers");
 const Upload = () => import("@/views/Upload");
-const CreateOffer = () => import("@/views/CreateOffer");
+const DocumentRequest = () => import("@/views/DocumentRequest");
+const BankLoanRequest = () => import("@/views/BankLoanRequest");
+const BankOffer = () => import("@/views/BankOffer");
 
 Vue.use(VueRouter);
 
@@ -79,9 +81,27 @@ const routes = [
     }
   },
   {
-    path: "/createOffer",
+    path: "/documentRequest",
     name: "BANK",
-    component: CreateOffer,
+    component: DocumentRequest,
+    meta: {
+      requiresAuth: true,
+      requireRoles: ["BANK"]
+    }
+  },
+  {
+    path: "/bankRequest",
+    name: "BANK",
+    component: BankLoanRequest,
+    meta: {
+      requiresAuth: true,
+      requireRoles: ["BANK"]
+    }
+  },
+  {
+    path: "/bankOffer",
+    name: "BANK",
+    component: BankOffer,
     meta: {
       requiresAuth: true,
       requireRoles: ["BANK"]

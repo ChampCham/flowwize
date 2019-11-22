@@ -45,7 +45,6 @@ export default {
   },
   actions: {
     async logIn({ commit }, payload) {
-      console.log(payload);
       commit("setLoading", true);
       commit("clearError");
       await fb
@@ -56,8 +55,19 @@ export default {
             .doc(user.uid)
             .get()
             .then(snapshot => {
-              commit("setLoading", false);
-              commit("setUser", snapshot.data());
+              const user = snapshot.data();
+              if (user.role !== payload.roleCheck) {
+                fb.auth()
+                  .signOut()
+                  .then(() => {
+                    commit("setLoading", false);
+                    commit("setUser", null);
+                    commit("setError", { message: "user not found" });
+                  });
+              } else {
+                commit("setLoading", false);
+                commit("setUser", user);
+              }
             })
             .catch(error => {
               commit("setLoading", false);

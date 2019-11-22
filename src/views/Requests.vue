@@ -1,6 +1,6 @@
 <template>
   <v-container fluid grid-list-xl text-xs-center class="mt-12 pt-5">
-    <Header />
+    <Header :role="role" />
     <v-flex lg8 sm12 xs12 offset-lg2>
       <Table v-if="!loading" />
     </v-flex>
@@ -24,7 +24,8 @@ export default {
     return {
       type: "",
       amount: "",
-      myRequests: []
+      myRequests: [],
+      role: "user"
     };
   },
   mounted() {

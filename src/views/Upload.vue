@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header />
+    <Header :role="role" />
     <v-container class="mt-12">
       <v-card>
         <v-card-title>Documents</v-card-title>
@@ -72,7 +72,8 @@ export default {
           name: "house-id-card",
           url: null
         }
-      ]
+      ],
+      role: "user"
     };
   },
   mounted() {

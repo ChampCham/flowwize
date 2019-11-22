@@ -118,10 +118,11 @@ export default {
         .dispatch("logIn", {
           email: this.email,
           password: this.password,
-          role: this.tab
+          roleCheck: this.tab.toLowerCase()
         })
         .then(() => {
           if (this.error === null) {
+            console.log(this.error);
             this.onClear();
             this.$router.push({ path: "/request" });
           }
