@@ -1,151 +1,122 @@
 <template>
   <div>
     <Header />
-      <v-container fluid grid-list-xl text-xs-center class="mt-12 pt-5">
-        <v-layout row>
-          <v-flex xs10  offset-xs1 sm4 offset-sm4 md4 offset-md4 lg4 offset-lg4>
-            <v-card>
-              <v-card-text>
-                <v-container>
-                  <v-layout row>
-                    <v-flex xs12>
-                      <h1>Upload</h1>
-                    </v-flex>
-                  </v-layout>
-                  <form>
-                    <v-layout row>
-                      <v-flex xs12>
-                        <v-text-field
-                          name="type"
-                          label="Type"
-                          id="type"
-                          v-model="type"
-                          type="text"
-                          required
-                        ></v-text-field>
-                      </v-flex>
-                    </v-layout>
-                    <v-layout row>
-                      <v-flex xs12>
-                        <v-text-field
-                          name="amount"
-                          label="Amount"
-                          id="amount"
-                          v-model="amount"
-                          type="text"
-                          required
-                        ></v-text-field>
-                      </v-flex>
-                    </v-layout>
-                    <v-layout row>
-                      <v-flex xs12>
-                        <v-btn block @click="submit" type="submit">
-                          Submit
-                          <span slot="loader" class="custom-loader">
-                            <v-icon light>fas fa-spinner</v-icon>
-                          </span>
-                        </v-btn>
-                      </v-flex>
-                    </v-layout>
-                  </form>
-                </v-container>
-              </v-card-text>
-            </v-card>
-          </v-flex>
-        </v-layout>
-      </v-container>
+    <v-container class="mt-12">
+      <v-card>
+        <v-card-title>Documents</v-card-title>
+        <v-list>
+          <v-list-group
+            v-for="(doc, idx) in documents"
+            :key="idx"
+            no-action
+            sub-group
+            value="true"
+          >
+            <template v-slot:activator>
+              <v-list-item-content>
+                <v-list-item-title>{{ doc.label }}</v-list-item-title>
+              </v-list-item-content>
+            </template>
+
+            <v-list-item>
+              <v-layout column class="ma-4">
+                <input
+                  :alt="doc.label"
+                  type="file"
+                  :name="doc.name"
+                  :id="doc.name"
+                  :ref="doc.name"
+                  accept="application/pdf"
+                  @change="handleFileUpload(doc.name)"
+                  hidden
+                />
+                <v-layout column v-if="doc.url !== null">
+                  Download PDF File
+                  <a class="ml-2" target="_blank" :href="doc.url">
+                    here
+                  </a>
+                  <PDFDocument :url="doc.url" />
+                </v-layout>
+                <h1 v-else>File not yet uploaded</h1>
+                <v-btn block class="mt-2" @click="upload(doc.name)"
+                  >{{ doc.url === null ? `Upload` : `Update` }}
+                  {{ doc.label }}</v-btn
+                >
+              </v-layout>
+            </v-list-item>
+          </v-list-group>
+        </v-list>
+      </v-card>
+    </v-container>
   </div>
 </template>
+
 <script>
-import Header from "@/components/Header";
+import _ from "lodash";
+import { storage, fb } from "../firebase";
+import Header from "../components/Header";
+import PDFDocument from "../components/PDFDocument";
 export default {
-  components: {
-    Header
-  },
+  components: { PDFDocument, Header },
   data() {
     return {
-      type: "",
-      amount: ""
+      storageRef: storage.ref().child(fb.auth().currentUser.uid),
+      documents: [
+        {
+          label: "National Identity Card",
+          name: "national-id-card",
+          url: null
+        },
+        {
+          label: "House Identity Card",
+          name: "house-id-card",
+          url: null
+        }
+      ]
     };
   },
+  mounted() {
+    this.init();
+  },
   methods: {
-    submit() {
-      console.log("Submit");
+    init() {
+      const tmp = _.cloneDeep(this.documents);
+      _.forEach(tmp, doc => {
+        this.getDownloadUrl(doc);
+      });
+    },
+    getDownloadUrl(doc) {
+      this.storageRef
+        .child(`${doc.name}.pdf`)
+        .getDownloadURL()
+        .then(url => {
+          const tmp = _.cloneDeep(this.documents);
+          const idx = _.findIndex(tmp, d => d.name === doc.name);
+          tmp[idx].url = url;
+          this.documents = tmp;
+        })
+        .catch(() => {});
+    },
+    upload(name) {
+      this.$refs[name][0].click();
+    },
+    handleFileUpload(name) {
+      const filename = `${name}.pdf`;
+      const uploadedFile = this.$refs[name][0].files[0];
+      this.storageRef
+        .child(filename)
+        .put(uploadedFile)
+        .then(() => {
+          const tmp = _.cloneDeep(this.documents);
+          _.forEach(tmp, doc => {
+            doc.url = null;
+          });
+          this.documents = tmp;
+          this.init();
+        });
     }
   }
 };
 </script>
-<style scoped>
-@import url("https://fonts.googleapis.com/css?family=Open+Sans|Roboto+Slab&display=swap");
-.bg {
-  background-image: url("/img/login_bg.png");
-  background-size: cover;
-}
-h1 {
-  text-align: center;
-  color: black;
-  font-family: "Roboto Slab", serif;
-  font-size: 35px;
-}
-p {
-  margin-top: 40px;
-  font-size: 13px;
-  text-align: center;
-}
-p a {
-  text-decoration: underline;
-  cursor: pointer;
-}
-.social-button {
-  width: 75px;
-  background: white;
-  padding: 10px;
-  border-radius: 100%;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
-  outline: 0;
-  border: 0;
-}
-.social-button:active {
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
-}
-.social-button img {
-  width: 100%;
-}
 
-.custom-loader {
-  animation: loader 1s infinite;
-  display: flex;
-}
-@-moz-keyframes loader {
-  from {
-    transform: rotate(0);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-@-webkit-keyframes loader {
-  from {
-    transform: rotate(0);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-@-o-keyframes loader {
-  from {
-    transform: rotate(0);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-@keyframes loader {
-  from {
-    transform: rotate(0);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-</style>
+<style scoped></style>

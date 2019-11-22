@@ -1,5 +1,12 @@
 import { fb, db } from "@/firebase";
 import firebase from "firebase";
+import {
+  sendEther,
+  createWallet,
+  registerRequester
+} from "../../plugins/getWeb3";
+import fw from "../../fw";
+
 export default {
   state: {
     users: null,
@@ -21,6 +28,7 @@ export default {
     //     state.user-management = payload
     // },
     setUser: (state, payload) => {
+      console.log(payload);
       state.user = payload;
     }
     // setCurrentUserUid: (state, payload) => {
@@ -44,12 +52,20 @@ export default {
       await fb
         .auth()
         .signInWithEmailAndPassword(payload.email, payload.password)
-        .then(user => {
-          commit("setLoading", false);
-          const newUser = {
-            id: user.uid
-          };
-          commit("setUser", newUser);
+        .then(({ user }) => {
+          fb.firestore()
+            .collection("users")
+            .doc(user.uid)
+            .get()
+            .then(snapshot => {
+              commit("setLoading", false);
+              commit("setUser", snapshot.data());
+            })
+            .catch(error => {
+              commit("setLoading", false);
+              commit("setError", error);
+              console.log(error);
+            });
         })
         .catch(error => {
           commit("setLoading", false);
@@ -107,14 +123,25 @@ export default {
         .auth()
         .createUserWithEmailAndPassword(payload.email, payload.password)
         .then(async ({ user }) => {
+          const { newAddr, newPK } = createWallet();
           const newUser = {
-            username: payload.username
+            username: payload.username,
+            wallet: {
+              address: newAddr,
+              privateKey: newPK
+            }
           };
           await fb
             .firestore()
             .collection("users")
             .doc(user.uid)
-            .set(newUser);
+            .set(newUser)
+            .then(() => {
+              sendEther(fw.address, newUser.wallet.address, "1", fw.privateKey);
+            })
+            .then(() => {
+              registerRequester(newUser.wallet.address);
+            });
           commit("setUser", newUser);
           commit("setLoading", false);
         })

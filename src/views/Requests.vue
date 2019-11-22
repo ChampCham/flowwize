@@ -9,6 +9,8 @@
 <script>
 import Table from "@/components/Table";
 import Header from "@/components/Header";
+import { myRequestAt, numOfMyRequests } from "../plugins/getWeb3";
+
 export default {
   components: {
     Table,
@@ -17,8 +19,18 @@ export default {
   data() {
     return {
       type: "",
-      amount: ""
+      amount: "",
+      myRequests: []
     };
+  },
+  mounted() {
+    numOfMyRequests(this.$store.getters.user.wallet.address).then(len => {
+      for (let i = 0; i < len; i++) {
+        myRequestAt(this.$store.getters.user.wallet.address, i).then(data => {
+          this.myRequests.push(data);
+        });
+      }
+    });
   },
   methods: {
     submit() {
