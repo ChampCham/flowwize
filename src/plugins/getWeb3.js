@@ -7,258 +7,258 @@ const httpProvider = "http://127.0.0.1:7545";
 const loanRequestContractAddr = "0x36E262F6d9A434922f52dF0B2440F6D5Bd00ADc5";
 const loanRequestContractAbi = [
   {
-    "constant": true,
-    "inputs": [],
-    "name": "numOfMyRequests",
-    "outputs": [
+    constant: true,
+    inputs: [],
+    name: "numOfMyRequests",
+    outputs: [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
       }
     ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
+    payable: false,
+    stateMutability: "view",
+    type: "function"
   },
   {
-    "constant": true,
-    "inputs": [
+    constant: true,
+    inputs: [
       {
-        "internalType": "uint256",
-        "name": "id",
-        "type": "uint256"
+        internalType: "uint256",
+        name: "id",
+        type: "uint256"
       }
     ],
-    "name": "myRequestAt",
-    "outputs": [
+    name: "myRequestAt",
+    outputs: [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
       },
       {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
+        internalType: "address",
+        name: "",
+        type: "address"
       },
       {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
+        internalType: "string",
+        name: "",
+        type: "string"
       },
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
       },
       {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
+        internalType: "bool",
+        name: "",
+        type: "bool"
       },
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
       }
     ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
+    payable: false,
+    stateMutability: "view",
+    type: "function"
   },
   {
-    "constant": false,
-    "inputs": [
+    constant: false,
+    inputs: [
       {
-        "internalType": "uint256",
-        "name": "id",
-        "type": "uint256"
+        internalType: "uint256",
+        name: "id",
+        type: "uint256"
       }
     ],
-    "name": "cancelRequest",
-    "outputs": [
+    name: "cancelRequest",
+    outputs: [
       {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
+        internalType: "bool",
+        name: "",
+        type: "bool"
       }
     ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
+    payable: false,
+    stateMutability: "nonpayable",
+    type: "function"
   },
   {
-    "constant": false,
-    "inputs": [
+    constant: false,
+    inputs: [
       {
-        "internalType": "string",
-        "name": "loanType",
-        "type": "string"
+        internalType: "string",
+        name: "loanType",
+        type: "string"
       },
       {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256"
       }
     ],
-    "name": "requestLoan",
-    "outputs": [
+    name: "requestLoan",
+    outputs: [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
       }
     ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
+    payable: false,
+    stateMutability: "nonpayable",
+    type: "function"
   },
   {
-    "constant": true,
-    "inputs": [],
-    "name": "numOfAllRequests",
-    "outputs": [
+    constant: true,
+    inputs: [],
+    name: "numOfAllRequests",
+    outputs: [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
       }
     ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
+    payable: false,
+    stateMutability: "view",
+    type: "function"
   },
   {
-    "constant": true,
-    "inputs": [
+    constant: true,
+    inputs: [
       {
-        "internalType": "uint256",
-        "name": "id",
-        "type": "uint256"
+        internalType: "uint256",
+        name: "id",
+        type: "uint256"
       }
     ],
-    "name": "requestAt",
-    "outputs": [
+    name: "requestAt",
+    outputs: [
       {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
+        internalType: "address",
+        name: "",
+        type: "address"
       },
       {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
+        internalType: "string",
+        name: "",
+        type: "string"
       },
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
       },
       {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
+        internalType: "bool",
+        name: "",
+        type: "bool"
       },
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
       }
     ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
+    payable: false,
+    stateMutability: "view",
+    type: "function"
   },
   {
-    "constant": false,
-    "inputs": [],
-    "name": "registerRequester",
-    "outputs": [
+    constant: false,
+    inputs: [],
+    name: "registerRequester",
+    outputs: [
       {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
+        internalType: "bool",
+        name: "",
+        type: "bool"
       }
     ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
+    payable: false,
+    stateMutability: "nonpayable",
+    type: "function"
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "requester",
-        "type": "address"
+        indexed: true,
+        internalType: "address",
+        name: "requester",
+        type: "address"
       }
     ],
-    "name": "RegisterRequester",
-    "type": "event"
+    name: "RegisterRequester",
+    type: "event"
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "requester",
-        "type": "address"
+        indexed: true,
+        internalType: "address",
+        name: "requester",
+        type: "address"
       },
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "requestId",
-        "type": "uint256"
+        indexed: false,
+        internalType: "uint256",
+        name: "requestId",
+        type: "uint256"
       },
       {
-        "indexed": false,
-        "internalType": "string",
-        "name": "loanType",
-        "type": "string"
+        indexed: false,
+        internalType: "string",
+        name: "loanType",
+        type: "string"
       },
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
+        indexed: false,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256"
       }
     ],
-    "name": "RequestLoan",
-    "type": "event"
+    name: "RequestLoan",
+    type: "event"
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "requester",
-        "type": "address"
+        indexed: true,
+        internalType: "address",
+        name: "requester",
+        type: "address"
       },
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "requestId",
-        "type": "uint256"
+        indexed: false,
+        internalType: "uint256",
+        name: "requestId",
+        type: "uint256"
       },
       {
-        "indexed": false,
-        "internalType": "string",
-        "name": "loanType",
-        "type": "string"
+        indexed: false,
+        internalType: "string",
+        name: "loanType",
+        type: "string"
       },
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
+        indexed: false,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256"
       }
     ],
-    "name": "CancelRequest",
-    "type": "event"
+    name: "CancelRequest",
+    type: "event"
   }
 ];
 
