@@ -78,8 +78,10 @@ import { mapGetters } from "vuex";
 export default {
   data() {
     return {
+      roles: ["user", "bank"],
       email: "",
-      password: ""
+      password: "",
+      tab: null
     };
   },
   computed: {
