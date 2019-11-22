@@ -131,8 +131,7 @@ export default {
               privateKey: newPK
             }
           };
-          await fb
-            .firestore()
+          await db
             .collection("users")
             .doc(user.uid)
             .set(newUser)
@@ -150,10 +149,36 @@ export default {
           commit("setError", error);
         });
     },
-    async logOut() {
-      //commit('setCurrentUser', null);
+    async logOut({ commit }) {
       await fb.auth().signOut();
-      //commit('setUser', null)
+      commit('setUser', null)
+    },
+    autoSignIn({ commit }, payload) {
+      const newUser = {
+        id: payload.uid,
+        username: "default",
+      }
+      commit('setUser', newUser)
+    },
+    fetchUserData({ commit, getters }) {
+      commit('setLoading', true)
+      commit('clearError')
+      const docRef = db.collection("users").doc(getters.user.id);
+
+      docRef.get().then(function (doc) {
+        if (doc.exists) {
+          const user = doc.data();
+          commit("setUser", user);
+        } else {
+          console.log("No such document!");
+        }
+        commit('setLoading', false)
+      }).catch(function (error) {
+         console.log("Error getting document:", error);
+          commit('setError', error)
+          commit('setLoading', false)
+      })     
+
     }
   }
 };

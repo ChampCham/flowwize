@@ -4,7 +4,8 @@ import Web3 from "web3";
 //   "https://rinkeby.infura.io/v3/230cd6eacddf44d6b6307c70164a1636";
 
 const httpProvider = "http://127.0.0.1:7545";
-const loanRequestContractAddr = "0x36E262F6d9A434922f52dF0B2440F6D5Bd00ADc5";
+// const loanRequestContractAddr = "0x36E262F6d9A434922f52dF0B2440F6D5Bd00ADc5";
+const loanRequestContractAddr = "0xc94929a02Cc197a65AA3D0B31eb9a530Fa534bD4";
 const loanRequestContractAbi = [
   {
     constant: true,

@@ -2,7 +2,7 @@
   <v-container fluid grid-list-xl text-xs-center class="mt-12 pt-5">
     <Header />
     <v-flex lg8 sm12 xs12 offset-lg2>
-      <Table />
+      <Table v-if="!loading"/>
     </v-flex>
   </v-container>
 </template>
@@ -10,11 +10,15 @@
 import Table from "@/components/Table";
 import Header from "@/components/Header";
 import { myRequestAt, numOfMyRequests } from "../plugins/getWeb3";
+import { mapGetters } from "vuex";
 
 export default {
   components: {
     Table,
     Header
+  },
+  computed: {
+    ...mapGetters(["error", "loading"])
   },
   data() {
     return {
