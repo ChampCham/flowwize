@@ -10,6 +10,7 @@
   "dependencies": {
     "core-js": "^3.3.2",
     "firebase": "^7.4.0",
+    "vee-validate": "^3.0.11",
     "vue": "^2.6.10",
     "vue-firestore": "^0.3.22",
     "vue-router": "^3.1.3",

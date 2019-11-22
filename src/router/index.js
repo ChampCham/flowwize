@@ -8,6 +8,8 @@ const LoanRequest = () => import("@/views/LoanRequest");
 const Requests = () => import("@/views/Requests");
 const Offers = () => import("@/views/Offers");
 const Upload = () => import("@/views/Upload");
+const CreateOffer = () => import("@/views/CreateOffer");
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -69,6 +71,14 @@ const routes = [
     component: Upload,
     meta: {
       requiresAuth: true
+    }
+  },
+  {
+    path: "/createOffer",
+    name: "CreateOffer",
+    component: CreateOffer,
+    meta: {
+      requiresGuest: true
     }
   }
 ];
