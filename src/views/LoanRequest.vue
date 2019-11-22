@@ -12,17 +12,15 @@
                     <h1>Loan Request</h1>
                   </v-flex>
                 </v-layout>
-                <form>
+                <v-form>
                   <v-layout row>
                     <v-flex xs12>
-                      <v-text-field
-                        name="type"
-                        label="Type"
-                        id="type"
+                      <v-select
+                        :items="types"
                         v-model="type"
-                        type="text"
-                        required
-                      ></v-text-field>
+                        label="Loan Type"
+                        outlined
+                      ></v-select>
                     </v-flex>
                   </v-layout>
                   <v-layout row>
@@ -50,7 +48,7 @@
                       >
                     </v-flex>
                   </v-layout>
-                </form>
+                </v-form>
               </v-container>
             </v-card-text>
           </v-card>
@@ -69,7 +67,8 @@ export default {
   },
   data() {
     return {
-      type: "",
+      types: ["House", "Car", "Business"],
+      type: "House",
       amount: ""
     };
   },
