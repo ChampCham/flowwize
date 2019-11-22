@@ -1,30 +1,31 @@
 <template>
-  <v-data-table :headers="headers" :items="users" class="elevation-1">
+  <v-data-table
+    :headers="headers"
+    :items="users"
+    sort-by="calories"
+    class="elevation-1"
+  >
     <template v-slot:top>
       <v-toolbar flat color="white">
-        <v-toolbar-title>Loan Requests </v-toolbar-title>
-        <v-divider class="mx-4" inset vertical></v-divider>
-        <v-spacer></v-spacer>
-        <v-dialog v-model="dialog" max-width="500px">
-          <template v-slot:activator="{ on }"> </template>
-          <v-card>
-            <v-card-title>
-              <span class="headline">{{ formTitle }}</span>
-            </v-card-title>
-          </v-card>
-        </v-dialog>
+        <v-toolbar-title>My Offers</v-toolbar-title>
       </v-toolbar>
     </template>
+    <template v-slot:item.status="{ item }">
+      <v-chip
+        label
+        small
+        :color="getColorByStatus(item.status)"
+        text-color="white"
+        >{{ item.status }}</v-chip
+      >
+    </template>
     <template v-slot:item.action="{ item }">
-      <v-btn color="primary" @click="request(item)">
-        Request
-      </v-btn>
+      <v-btn color="primary">Done</v-btn>
     </template>
   </v-data-table>
 </template>
 
 <script>
-//todo: connect to database
 export default {
   data: () => ({
     dialog: false,
@@ -36,9 +37,11 @@ export default {
         value: "name"
       },
       { text: "Date", value: "date" },
+      { text: "Status", value: "status" },
       { text: "Amount", value: "amount" },
       { text: "Type", value: "type" },
-      { text: "Actions", value: "action", sortable: false }
+      { text: "Actions", value: "action", sortable: false },
+      { text: "Request Doc.", value: "documents", sortable: false }
     ],
     users: []
   }),
@@ -49,21 +52,24 @@ export default {
 
   methods: {
     initialize() {
-      console.log("Initialized");
       this.users = [
         {
           name: "Joey",
           date: 159,
           amount: 6.0,
-          type: 24
+          type: 24,
+          status: 25
         }
       ];
     },
 
     request() {
-      // router.push("Request page")
-      // this.$router.push({ path: "/request" });
       console.log("push to request page");
+    },
+    getColorByStatus(status) {
+      if (status > 400) return "red";
+      else if (status > 200) return "orange";
+      else return "green";
     }
   }
 };

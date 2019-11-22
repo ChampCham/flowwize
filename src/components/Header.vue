@@ -34,7 +34,7 @@
       <v-spacer></v-spacer>
       <v-toolbar-items class="hidden-xs-only">
         <v-btn text v-for="item in menuItems" :key="item.title" :to="item.path">
-          <v-icon left dark>{{ item.icon }}</v-icon>
+          <!-- <v-icon left dark>{{ item.icon }}</v-icon> -->
           {{ item.title }}
         </v-btn>
         <v-btn text @click="logOut">
@@ -70,11 +70,6 @@ export default {
       if (this.role === "bank") {
         return [
           { title: "Loan Request", path: "/bankRequest", icon: "fas fa-users" },
-          {
-            title: "Document Request",
-            path: "/documentRequest",
-            icon: "fas fa-users"
-          },
           { title: "My Offer", path: "/bankOffer", icon: "fas fa-users" }
         ];
       }

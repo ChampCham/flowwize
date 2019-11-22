@@ -71,7 +71,6 @@ export default {
       type: "House",
       amount: "",
       role: "user"
-
     };
   },
   methods: {

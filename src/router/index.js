@@ -9,7 +9,6 @@ const LoanRequest = () => import("@/views/LoanRequest");
 const Requests = () => import("@/views/Requests");
 const Offers = () => import("@/views/Offers");
 const Upload = () => import("@/views/Upload");
-const DocumentRequest = () => import("@/views/DocumentRequest");
 const BankLoanRequest = () => import("@/views/BankLoanRequest");
 const BankOffer = () => import("@/views/BankOffer");
 
@@ -78,15 +77,6 @@ const routes = [
     meta: {
       requiresAuth: true,
       requireRoles: ["USER"]
-    }
-  },
-  {
-    path: "/documentRequest",
-    name: "BANK",
-    component: DocumentRequest,
-    meta: {
-      requiresAuth: true,
-      requireRoles: ["BANK"]
     }
   },
   {
