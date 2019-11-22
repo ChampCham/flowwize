@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import { fb } from "@/firebase";
+import { fb, db } from "@/firebase";
+import _ from "lodash";
 const Login = () => import("@/views/Login");
 const Signup = () => import("@/views/Signup");
 const Header = () => import("@/components/Header");
@@ -26,7 +27,7 @@ const routes = [
     }
   },
   {
-    path: "/signup",
+    path: "/signup/:role",
     name: "Signup",
     component: Signup,
     meta: {
@@ -43,42 +44,47 @@ const routes = [
   },
   {
     path: "/request",
-    name: "LoanRequest",
+    name: "USER",
     component: LoanRequest,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      requireRoles: ["USER"]
     }
   },
   {
     path: "/requests",
-    name: "Requests",
+    name: "USER",
     component: Requests,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      requireRoles: ["USER"]
     }
   },
   {
     path: "/offers",
-    name: "Offers",
+    name: "USER",
     component: Offers,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      requireRoles: ["USER"]
     }
   },
   {
     path: "/upload",
-    name: "Upload",
+    name: "USER",
     component: Upload,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      requireRoles: ["USER"]
     }
   },
   {
     path: "/createOffer",
-    name: "CreateOffer",
+    name: "BANK",
     component: CreateOffer,
     meta: {
-      requiresGuest: true
+      requiresAuth: true,
+      requireRoles: ["BANK"]
     }
   }
 ];
@@ -90,30 +96,56 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  const auth = to.matched.some(record => record.meta.requiresAuth);
+  const guest = to.matched.some(record => record.meta.requiresGuest);
+  const requireRoles = to.meta.requireRoles;
+
   const currentUser = fb.auth().currentUser;
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-  const requiresGuest = to.matched.some(record => record.meta.requiresGuest);
-  if (requiresAuth) {
-    if (!currentUser) {
-      next({
-        path: "/login",
-        query: {
-          redirect: to.fullPath
-        }
-      });
-    } else next();
-  } else if (requiresGuest) {
-    if (currentUser) {
-      next({
-        path: "/request",
-        query: {
-          redirect: to.fullPath
-        }
-      });
+  let currentUserInfo = null;
+  if (currentUser === null) {
+    if (auth) {
+      next({ path: "/login" });
     } else {
       next();
     }
-  } else next();
+  } else {
+    db.collection("users")
+      .doc(currentUser.uid)
+      .get()
+      .then(doc => {
+        console.log(currentUserInfo);
+        currentUserInfo = doc.data();
+        currentUserInfo.role.toUpperCase();
+      })
+      .catch(error => {
+        console.log("Error getting documents: ", error);
+      })
+      .then(() => {
+        if (!currentUserInfo) {
+          if (auth) {
+            next({ path: "/login" });
+          } else {
+            next();
+          }
+        } else {
+          const role = currentUserInfo.role.toUpperCase();
+          if (auth) {
+            if (requireRoles) {
+              if (_.indexOf(requireRoles, role) > -1) {
+                next();
+              } else {
+                next({ name: role });
+              }
+            } else {
+              next();
+            }
+          } else if (guest) {
+            next({ name: role });
+          } else {
+            next();
+          }
+        }
+      });
+  }
 });
-
 export default router;

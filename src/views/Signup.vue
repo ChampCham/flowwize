@@ -15,6 +15,7 @@
               <v-layout row>
                 <v-flex xs12>
                   <h1>Sign Up</h1>
+                  <p>{{ role }}</p>
                 </v-flex>
               </v-layout>
               <form @submit.prevent="onSignup">
@@ -102,6 +103,7 @@ export default {
   data() {
     return {
       loading: false,
+      role: this.$route.params.role,
       email: "",
       username: "",
       password: "",
@@ -116,7 +118,9 @@ export default {
         : true;
     }
   },
-
+  mounted() {
+    console.log(this.role);
+  },
   watch: {
     user(value) {
       if (value !== null && value !== undefined) {
@@ -132,6 +136,7 @@ export default {
           type: "signUp",
           email: this.email,
           username: this.username,
+          role: this.role,
           password: this.password
         });
       }

@@ -12,7 +12,5 @@
 
 export default {
   address: "0x086D9675c248e4F89AD93516fb3FA5e11e9Ad867",
-  privateKey:
-    "7fa16aee72e1c4378e6370ca7d733fa1636de2ff8c85e9236fb13c4cd87c8ee5"
+  privateKey: "7fa16aee72e1c4378e6370ca7d733fa1636de2ff8c85e9236fb13c4cd87c8ee5"
 };
-

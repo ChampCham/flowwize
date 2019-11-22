@@ -1,5 +1,4 @@
 import { fb, db } from "@/firebase";
-import firebase from "firebase";
 import {
   sendEther,
   createWallet,
@@ -53,8 +52,7 @@ export default {
         .auth()
         .signInWithEmailAndPassword(payload.email, payload.password)
         .then(({ user }) => {
-          fb.firestore()
-            .collection("users")
+          db.collection("users")
             .doc(user.uid)
             .get()
             .then(snapshot => {
@@ -73,48 +71,6 @@ export default {
           console.log(error);
         });
     },
-    async signUserInWithGoogle({ commit }) {
-      commit("setLoading", true);
-      commit("clearError");
-      const provider = new firebase.auth.GoogleAuthProvider();
-      await fb
-        .auth()
-        .signInWithPopup(provider)
-        .then(result => {
-          const uid = result.user.uid;
-          db.collection("users")
-            .doc(uid)
-            .get()
-            .then(data => {
-              if (data.exists === false) {
-                db.collection("users")
-                  .doc(uid)
-                  .set({
-                    fullName: result.user.displayName,
-                    email: result.user.email,
-                    imageUrl: result.user.photoURL,
-                    role: "USER",
-                    isManager: false,
-                    notifications: []
-                  });
-              } else {
-                db.collection("users")
-                  .doc(uid)
-                  .update({
-                    fullName: result.user.displayName,
-                    email: result.user.email,
-                    imageUrl: result.user.photoURL
-                  });
-              }
-            });
-          commit("setLoading", false);
-        })
-        .catch(error => {
-          commit("setLoading", false);
-          commit("setError", error);
-          //console.log(error)
-        });
-    },
     async signUp({ commit }, payload) {
       console.log(payload);
       commit("setLoading", true);
@@ -126,6 +82,7 @@ export default {
           const { newAddr, newPK } = createWallet();
           const newUser = {
             username: payload.username,
+            role: payload.role,
             wallet: {
               address: newAddr,
               privateKey: newPK
@@ -151,34 +108,36 @@ export default {
     },
     async logOut({ commit }) {
       await fb.auth().signOut();
-      commit('setUser', null)
+      commit("setUser", null);
     },
     autoSignIn({ commit }, payload) {
       const newUser = {
         id: payload.uid,
-        username: "default",
-      }
-      commit('setUser', newUser)
+        username: "default"
+      };
+      commit("setUser", newUser);
     },
     fetchUserData({ commit, getters }) {
-      commit('setLoading', true)
-      commit('clearError')
+      commit("setLoading", true);
+      commit("clearError");
       const docRef = db.collection("users").doc(getters.user.id);
 
-      docRef.get().then(function (doc) {
-        if (doc.exists) {
-          const user = doc.data();
-          commit("setUser", user);
-        } else {
-          console.log("No such document!");
-        }
-        commit('setLoading', false)
-      }).catch(function (error) {
-         console.log("Error getting document:", error);
-          commit('setError', error)
-          commit('setLoading', false)
-      })     
-
+      docRef
+        .get()
+        .then(function(doc) {
+          if (doc.exists) {
+            const user = doc.data();
+            commit("setUser", user);
+          } else {
+            console.log("No such document!");
+          }
+          commit("setLoading", false);
+        })
+        .catch(function(error) {
+          console.log("Error getting document:", error);
+          commit("setError", error);
+          commit("setLoading", false);
+        });
     }
   }
 };

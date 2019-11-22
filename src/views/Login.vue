@@ -3,9 +3,7 @@
     <v-layout row v-if="error">
       <v-flex xs10 offset-xs1 sm4 offset-sm4 md4 offset-md4 lg4 offset-lg4>
         <v-alert dismissible type="error" @click="onClear">
-          {{
-          error.message
-          }}
+          {{ error.message }}
         </v-alert>
       </v-flex>
     </v-layout>
@@ -29,23 +27,23 @@
                   class="tabs"
                 >
                   <v-tabs-slider></v-tabs-slider>
-                  <v-tab href="#tab-1">
+                  <v-tab href="#User">
                     <div class="hidden-sm-and-down">User</div>
                     <v-icon>fas fa-user</v-icon>
                   </v-tab>
-                  <v-tab href="#tab-2">
+                  <v-tab href="#Bank">
                     <div class="hidden-sm-and-down">Bank</div>
                     <v-icon>fas fa-university</v-icon>
                   </v-tab>
                 </v-tabs>
                 <v-tabs-items v-model="tab">
-                  <v-tab-item v-for="i in 2" :key="i" :value="'tab-' + i">
+                  <v-tab-item v-for="i in roles" :key="i" :value="i">
                     <div>
                       <v-layout row>
                         <v-flex xs12>
                           <v-text-field
                             name="email"
-                            label="Mail"
+                            :label="`${i} Mail`"
                             id="email"
                             v-model="email"
                             type="email"
@@ -75,7 +73,12 @@
                           </v-btn>
                         </v-flex>
                         <v-flex xs6>
-                          <v-btn block @click="login" :disabled="loading" :loading="loading">
+                          <v-btn
+                            block
+                            @click="login"
+                            :disabled="loading"
+                            :loading="loading"
+                          >
                             Log in
                             <span slot="loader" class="custom-loader">
                               <v-icon light>fas fa-spinner</v-icon>
@@ -99,7 +102,7 @@ import { mapGetters } from "vuex";
 export default {
   data() {
     return {
-      roles: ["user", "bank"],
+      roles: ["User", "Bank"],
       email: "",
       password: "",
       tab: null
@@ -114,7 +117,8 @@ export default {
       this.$store
         .dispatch("logIn", {
           email: this.email,
-          password: this.password
+          password: this.password,
+          role: this.tab
         })
         .then(() => {
           if (this.error === null) {
@@ -124,16 +128,9 @@ export default {
           this.loading = false;
         });
     },
-    signInGoogle() {
-      this.$store.dispatch("signUserInWithGoogle").then(() => {
-        if (this.error === null) {
-          this.onClear();
-          this.$router.push({ path: "/" });
-        }
-      });
-    },
     signup() {
-      this.$router.push({ path: "/signup" });
+      const role = this.tab.toLowerCase();
+      this.$router.push({ name: "Signup", params: { role: role } });
     },
     onClear() {
       this.$store.dispatch("clearError");
