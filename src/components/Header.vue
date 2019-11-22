@@ -2,7 +2,11 @@
   <div>
     <v-navigation-drawer v-model="sidebar" temporary left hide-overlay fixed>
       <v-list>
-        <v-list-item v-for="item in menuItems" :key="item.title" :to="item.path">
+        <v-list-item
+          v-for="item in menuItems"
+          :key="item.title"
+          :to="item.path"
+        >
           <v-list-item-action>
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-action>
@@ -24,9 +28,7 @@
       </span>
       <v-toolbar-title>
         <router-link to="/" tag="span" style="cursor: pointer">
-          {{
-          appTitle
-          }}
+          {{ appTitle }}
         </router-link>
       </v-toolbar-title>
       <v-spacer></v-spacer>

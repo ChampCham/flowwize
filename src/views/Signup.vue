@@ -1,14 +1,14 @@
 <template>
   <v-container fluid grid-list-xl text-xs-center class="mt-1 pt-5">
     <v-layout row v-if="error">
-      <v-flex xs10  offset-xs1 sm4 offset-sm4 md4 offset-md4>
+      <v-flex xs10 offset-xs1 sm4 offset-sm4 md4 offset-md4>
         <v-alert dismissible type="error" @click="onClear">{{
           error.message
         }}</v-alert>
       </v-flex>
     </v-layout>
     <v-layout row>
-      <v-flex xs12   sm4 offset-sm4 md4 offset-md4>
+      <v-flex xs12 sm4 offset-sm4 md4 offset-md4>
         <v-card>
           <v-card-text>
             <v-container>
