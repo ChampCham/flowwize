@@ -69,7 +69,8 @@ export default {
     return {
       types: ["House", "Car", "Business"],
       type: "House",
-      amount: ""
+      amount: "",
+      role: "user"
 
     };
   },
