@@ -26,9 +26,9 @@ export default {
   mounted() {
     numOfMyRequests(this.$store.getters.user.wallet.address).then(len => {
       for (let i = 0; i < len; i++) {
-          myRequestAt(this.$store.getters.user.wallet.address, i).then(data => {
-            this.myRequests.push(data);
-          });
+        myRequestAt(this.$store.getters.user.wallet.address, i).then(data => {
+          this.myRequests.push(data);
+        });
       }
     });
   },

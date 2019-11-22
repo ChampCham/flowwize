@@ -3,7 +3,8 @@
     :headers="headers"
     :items="items"
     sort-by="calories"
-    class="elevation-1">
+    class="elevation-1"
+  >
     <template v-slot:no-data>
       <v-btn color="primary" @click="initialize">Reset</v-btn>
     </template>
