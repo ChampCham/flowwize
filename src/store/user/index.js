@@ -15,33 +15,17 @@ export default {
     users: state => {
       return state.users;
     },
-    // currentUserUid: state => {
-    //     return state.currentUserUid
-    // },
+
     user: state => {
       return state.user;
     }
   },
   mutations: {
-    // setUsers: (state, payload) => {
-    //     state.user-management = payload
-    // },
+
     setUser: (state, payload) => {
       console.log(payload);
       state.user = payload;
     }
-    // setCurrentUserUid: (state, payload) => {
-    //     state.currentUserUid = payload
-    // },
-    // addUser: (state, payload) => {
-    //     let user = state.user-management.find(user => user.id === payload.id)
-    //     if (user) {
-    //         user = payload
-    //     } else {
-    //         state.user-management.push(payload)
-    //     }
-    // },
-    // ...vuexfireMutations
   },
   actions: {
     async logIn({ commit }, payload) {
