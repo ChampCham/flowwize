@@ -46,7 +46,10 @@ export default {
         this.items = [];
         for (let i = 0; i < len; i++) {
           myRequestAt(this.$store.getters.user.wallet.address, i).then(data => {
-            this.items.push(this.parseItem(data));
+            const record = this.parseItem(data);
+            if (record.valid !== false) {
+              this.items.push(record);
+            }
           });
         }
       });
