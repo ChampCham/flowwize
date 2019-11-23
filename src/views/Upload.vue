@@ -50,7 +50,6 @@
     </v-container>
   </div>
 </template>
-
 <script>
 import _ from "lodash";
 import { storage, fb } from "../firebase";
@@ -120,4 +119,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

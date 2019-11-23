@@ -5,6 +5,11 @@
     sort-by="calories"
     class="elevation-1"
   >
+    <template v-slot:top>
+      <v-toolbar flat color="white">
+        <v-toolbar-title>Loan Offer</v-toolbar-title>
+      </v-toolbar>
+    </template>
     <template v-slot:no-data>
       <v-btn color="primary" @click="initialize">Reset</v-btn>
     </template>

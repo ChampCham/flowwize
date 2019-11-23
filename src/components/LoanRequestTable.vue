@@ -5,12 +5,17 @@
     sort-by="calories"
     class="elevation-1"
   >
+    <template v-slot:top>
+      <v-toolbar flat color="white">
+        <v-toolbar-title>Loan Requests</v-toolbar-title>
+      </v-toolbar>
+    </template>
     <template v-slot:no-data>
       <v-btn color="primary" @click="initialize">Reset</v-btn>
     </template>
-    <template v-slot:item.timestamp="{ item }">
-      {{ formatDate(item.timestamp) }}
-    </template>
+    <template v-slot:item.timestamp="{ item }">{{
+      formatDate(item.timestamp)
+    }}</template>
     <template v-slot:item.actions="{ item }">
       <v-btn :disabled="!item.valid" @click="cancelReq(item.id)">Cancel</v-btn>
     </template>
@@ -49,7 +54,7 @@ export default {
             const record = this.parseItem(data);
             if (record.valid !== false) {
               this.items.push(record);
-              console.log(record)
+              console.log(record);
             }
           });
         }
