@@ -3,11 +3,11 @@ import Web3 from "web3";
 // const httpProvider =
 //   "https://rinkeby.infura.io/v3/230cd6eacddf44d6b6307c70164a1636";
 
-const httpProvider = "http://127.0.0.1:7545";
+const httpProvider = "ws://127.0.0.1:7545";
 //Fronk
 // const contractAddr = "0xEb8e73998Fb63CFdE6C5178c27DdCbBF51b47cdB";
 //Champ
-const contractAddr = "0xfb8C44d2F49E1b09920ea245c0504105bF24e4a4";
+const contractAddr = "0x990D40437cC7FCAB6C19c6eEe8B7Ef9D2f9bC742";
 
 const contractAbi = [
   {
