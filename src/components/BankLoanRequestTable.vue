@@ -82,9 +82,6 @@ export default {
     },
     formatDate(t) {
       return moment(`${t}000`, "x").format("Do MMMM YYYY, h:mm:ss a");
-    },
-    request() {
-      console.log("push to request page");
     }
   }
 };

@@ -30,7 +30,7 @@ export default {
   data: () => ({
     valid: true,
     select: null,
-    BankNames: ["Bank 1", "Bank 2", "Bank 3", "Bank 4"],
+    BankNames: ["Bank 1", "Bank 2", "Bank 3", "Bank 4"]
   })
 };
 </script>

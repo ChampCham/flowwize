@@ -23,6 +23,6 @@ export default {
     return {
       role: "user"
     };
-  },
+  }
 };
 </script>

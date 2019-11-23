@@ -73,11 +73,17 @@ export default {
     },
     onSubmit() {
       const tmp = _.filter(this.documents, doc => doc.checked).map(doc => ({
+        label: doc.label,
         name: doc.name,
         copies: doc.copies
       }));
       const user = this.$store.getters.user;
-      requestDocument(user.wallet.address, this.req.id, JSON.stringify(tmp), user.fullname);
+      requestDocument(
+        user.wallet.address,
+        this.req.id,
+        JSON.stringify(tmp),
+        user.fullname
+      );
       this.clearInput();
     }
   }

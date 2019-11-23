@@ -1,31 +1,20 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="users"
-    sort-by="calories"
-    class="elevation-1"
-  >
+  <v-data-table :headers="headers" :items="items" class="elevation-1">
     <template v-slot:top>
       <v-toolbar flat color="white">
         <v-toolbar-title>My Offers</v-toolbar-title>
       </v-toolbar>
     </template>
-    <template v-slot:item.status="{ item }">
-      <v-chip
-        label
-        small
-        :color="getColorByStatus(item.status)"
-        text-color="white"
-        >{{ item.status }}</v-chip
-      >
-    </template>
-    <template v-slot:item.action="{ item }">
-      <v-btn color="primary">Done</v-btn>
+    <template v-slot:item.timestamp="{ item }">
+      {{ formatDate(item.timestamp) }}
     </template>
     <template v-slot:item.documents="{ item }">
-      <v-list-item v-for="doc in item.documents" :key="doc">
+      <v-list-item v-for="doc in item.documents" :key="doc.id">
         <v-list-item-content>
-          <v-list-item-title v-text="doc" class="listItem"></v-list-item-title>
+          <v-list-item-title
+            v-text="`${doc.copies} x ${doc.label}`"
+            class="listItem"
+          ></v-list-item-title>
         </v-list-item-content>
       </v-list-item>
     </template>
@@ -33,24 +22,26 @@
 </template>
 
 <script>
+import _ from "lodash";
+import moment from "moment";
+import {
+  numOfMyBankRequests,
+  myBankRequestAt,
+  requestAt
+} from "../plugins/getWeb3";
+import { db } from "../firebase";
+
 export default {
   data: () => ({
-    dialog: false,
     headers: [
-      {
-        text: "Users",
-        align: "left",
-        sortable: false,
-        value: "name"
-      },
-      { text: "Date", value: "date" },
-      { text: "Status", value: "status" },
+      { text: "Users", value: "name" },
+      { text: "Loan Type", value: "loanType" },
       { text: "Amount", value: "amount" },
       { text: "Request Doc.", value: "documents", sortable: false },
-      { text: "Type", value: "type" },
-      { text: "Actions", value: "action", sortable: false }
+      { text: "Status", value: "status" },
+      { text: "Date", value: "timestamp" }
     ],
-    users: []
+    items: []
   }),
 
   created() {
@@ -59,25 +50,44 @@ export default {
 
   methods: {
     initialize() {
-      this.users = [
-        {
-          name: "Joey",
-          date: 159,
-          amount: 6.0,
-          type: 24,
-          status: 25,
-          documents: ["dsadsdadasd", "adsadsadsadas", "asdsadadsad"]
+      const bank = this.$store.getters.user;
+      numOfMyBankRequests(bank.wallet.address).then(len => {
+        this.items = [];
+        for (let i = 0; i < len; i++) {
+          myBankRequestAt(bank.wallet.address, i).then(res => {
+            requestAt(res[2]).then(lreq => {
+              db.collection("users")
+                .where("wallet.address", "==", lreq[1])
+                .get()
+                .then(doc => {
+                  _.forEach(doc.docs, d => {
+                    const record = this.parseItem(res, lreq, d.data().fullname);
+                    this.items.push(record);
+                  });
+                });
+            });
+          });
         }
-      ];
+      });
     },
-
-    request() {
-      console.log("push to request page");
+    parseItem(data, req, name) {
+      return {
+        id: data[0],
+        bank: data[1],
+        lrId: data[2],
+        documents: JSON.parse(data[3]),
+        valid: data[4],
+        bankName: data[5],
+        timestamp: data[6],
+        status: data[7],
+        user: req[1],
+        loanType: req[2],
+        amount: req[3],
+        name
+      };
     },
-    getColorByStatus(status) {
-      if (status > 400) return "red";
-      else if (status > 200) return "orange";
-      else return "green";
+    formatDate(t) {
+      return moment(`${t}000`, "x").format("Do MMMM YYYY, h:mm:ss a");
     }
   }
 };
