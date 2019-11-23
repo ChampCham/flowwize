@@ -45,7 +45,8 @@ const routes = [
   },
   {
     path: "/request",
-    name: "USER",
+    name: "LoanRequest",
+    role: "USER",
     component: LoanRequest,
     meta: {
       requiresAuth: true,
@@ -54,7 +55,8 @@ const routes = [
   },
   {
     path: "/requests",
-    name: "USER",
+    name: "Requests",
+    role: "USER",
     component: Requests,
     meta: {
       requiresAuth: true,
@@ -63,8 +65,9 @@ const routes = [
   },
   {
     path: "/offers",
-    name: "USER",
+    name: "Offers",
     component: Offers,
+    role: "USER",
     meta: {
       requiresAuth: true,
       requireRoles: ["USER"]
@@ -72,8 +75,9 @@ const routes = [
   },
   {
     path: "/upload",
-    name: "USER",
+    name: "Upload",
     component: Upload,
+    role: "USER",
     meta: {
       requiresAuth: true,
       requireRoles: ["USER"]
@@ -81,8 +85,9 @@ const routes = [
   },
   {
     path: "/bankRequest",
-    name: "BANK",
+    name: "BankLoanRequest",
     component: BankLoanRequest,
+    role: "BANK",
     meta: {
       requiresAuth: true,
       requireRoles: ["BANK"]
@@ -90,8 +95,9 @@ const routes = [
   },
   {
     path: "/bankOffer",
-    name: "BANK",
+    name: "BankOffer",
     component: BankOffer,
+    role: "BANK",
     meta: {
       requiresAuth: true,
       requireRoles: ["BANK"]
@@ -123,7 +129,6 @@ router.beforeEach((to, from, next) => {
       .doc(currentUser.uid)
       .get()
       .then(doc => {
-        console.log(currentUserInfo);
         currentUserInfo = doc.data();
         currentUserInfo.role.toUpperCase();
       })
@@ -144,13 +149,13 @@ router.beforeEach((to, from, next) => {
               if (_.indexOf(requireRoles, role) > -1) {
                 next();
               } else {
-                next({ name: role });
+                next({ role: role });
               }
             } else {
               next();
             }
           } else if (guest) {
-            next({ name: role });
+            next({ role: role });
           } else {
             next();
           }
