@@ -15,7 +15,7 @@
 
         <v-list-item>
           <v-list-item-action>
-            <v-icon>"fas fa-sign-out-alt"</v-icon>
+            <v-icon>fas fa-sign-out-alt</v-icon>
           </v-list-item-action>
           <v-list-item-content @click="logOut">LogOut</v-list-item-content>
         </v-list-item>
@@ -27,18 +27,18 @@
         <v-app-bar-nav-icon @click="sidebar = !sidebar"></v-app-bar-nav-icon>
       </span>
       <v-toolbar-title>
-        <router-link to="/" tag="span" style="cursor: pointer">
-          {{ appTitle }}
-        </router-link>
+        <router-link to="/" tag="span" style="cursor: pointer">{{
+          appTitle
+        }}</router-link>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items class="hidden-xs-only">
         <v-btn text v-for="item in menuItems" :key="item.title" :to="item.path">
-          <!-- <v-icon left dark>{{ item.icon }}</v-icon> -->
+          <v-icon left dark>{{ item.icon }}</v-icon>
           {{ item.title }}
         </v-btn>
         <v-btn text @click="logOut">
-          <v-icon left>"fas fa-sign-out-alt"</v-icon>LogOut
+          <v-icon left>fas fa-sign-out-alt</v-icon>LogOut
         </v-btn>
       </v-toolbar-items>
     </v-app-bar>
@@ -61,10 +61,18 @@ export default {
     menuItems() {
       if (this.role === "user") {
         return [
-          { title: "Loan Request", path: "/request", icon: "fas fa-users" },
-          { title: "My Request", path: "/requests", icon: "fas fa-users" },
-          { title: "My Offer", path: "/offers", icon: "fas fa-users" },
-          { title: "Upload", path: "/upload", icon: "fas fa-users" }
+          {
+            title: "Loan Request",
+            path: "/request",
+            icon: "fas fa-sticky-note"
+          },
+          { title: "My Request", path: "/requests", icon: "fas fa-copy" },
+          {
+            title: "My Offer",
+            path: "/offers",
+            icon: "fas fa-hand-holding-usd"
+          },
+          { title: "Upload", path: "/upload", icon: "fas fa-file-upload" }
         ];
       }
       if (this.role === "bank") {
