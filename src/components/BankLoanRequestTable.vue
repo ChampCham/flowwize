@@ -57,7 +57,6 @@ export default {
         for (let i = 0; i < len; i++) {
           myBankRequestAt(this.user.wallet.address, i).then(req => {
             const request = this.parseRequest(req);
-            console.log(request)
             _.forEach(value, item => {
               if (request.lrId === item.id && !this.disableditems.includes(request.lrId )) {
                 this.disableditems.push(request.lrId);
@@ -66,7 +65,6 @@ export default {
           });
         }
       });
-
     }
   },
   methods: {

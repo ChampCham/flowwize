@@ -3,7 +3,7 @@ import Web3 from "web3";
 // const httpProvider =
 //   "https://rinkeby.infura.io/v3/230cd6eacddf44d6b6307c70164a1636";
 
-const httpProvider = "http://127.0.0.1:7545";
+const httpProvider = "ws://127.0.0.1:7545";
 const contractAddr = "0xEb8e73998Fb63CFdE6C5178c27DdCbBF51b47cdB";
 // const contractAddr = "0xc94929a02Cc197a65AA3D0B31eb9a530Fa534bD4";
 const contractAbi = [
@@ -993,24 +993,21 @@ const contractAbi = [
 ];
 
 const gasLimit = "600000";
+const web3 = new Web3(new Web3.providers.WebsocketProvider(httpProvider));
+const contract = new web3.eth.Contract(contractAbi, contractAddr);
+contract.events.Accept().on("data", data => {
+  console.log(data.returnValues.id);
+});
 
 export const createWallet = () => {
-  if (Web3) {
-    const web3 = new Web3(new Web3.providers.HttpProvider(httpProvider));
-    const { address, privateKey } = web3.eth.accounts.create();
-    console.log(`address: ${address}, privateKey: ${privateKey}`);
-    return { newAddr: address, newPK: privateKey };
-  } else {
-    console.error("cannot find web3");
-    return null;
-  }
+  const { address, privateKey } = web3.eth.accounts.create();
+  return { newAddr: address, newPK: privateKey };
 };
 
 const signAndSendTransaction = (web3, account, transaction) => {
   return account
     .signTransaction(transaction)
     .then(function(results) {
-      console.log(results);
       if ("rawTransaction" in results) {
         web3.eth
           .sendSignedTransaction(results.rawTransaction)
@@ -1026,63 +1023,33 @@ const signAndSendTransaction = (web3, account, transaction) => {
 };
 
 export const sendEther = (source, target, amount, key) => {
-  if (Web3) {
-    const web3 = new Web3(new Web3.providers.HttpProvider(httpProvider));
-    console.log(
-      `source: ${source} target: ${target} amount: ${amount} key: ${key}`
-    );
-    const account = web3.eth.accounts.privateKeyToAccount(key);
-    console.log(account);
-    if (account.address !== source) {
-      console.error("Key mismatch!");
-    } else {
-      console.log(`sign`);
-      signAndSendTransaction(web3, account, {
-        from: source,
-        to: target,
-        value: web3.utils.toWei(amount, "ether"),
-        gas: gasLimit
-      });
-    }
+  const account = web3.eth.accounts.privateKeyToAccount(key);
+  if (account.address !== source) {
+    console.error("Key mismatch!");
   } else {
-    console.error("cannot find web3");
+    signAndSendTransaction(web3, account, {
+      from: source,
+      to: target,
+      value: web3.utils.toWei(amount, "ether"),
+      gas: gasLimit
+    });
   }
 };
 
 export const registerRequester = address => {
-  if (Web3) {
-    const web3 = new Web3(new Web3.providers.HttpProvider(httpProvider));
-    const contract = new web3.eth.Contract(contractAbi, contractAddr);
-    return contract.methods
-      .registerRequester()
-      .send({ from: address, gas: gasLimit });
-  } else {
-    console.error("cannot find web3");
-  }
+  return contract.methods
+    .registerRequester()
+    .send({ from: address, gas: gasLimit });
 };
 
 export const registerBank = address => {
-  if (Web3) {
-    const web3 = new Web3(new Web3.providers.HttpProvider(httpProvider));
-    const contract = new web3.eth.Contract(contractAbi, contractAddr);
-    return contract.methods
-      .registerBank()
-      .send({ from: address, gas: gasLimit });
-  } else {
-    console.error("cannot find web3");
-  }
+  return contract.methods.registerBank().send({ from: address, gas: gasLimit });
 };
 
 export const requestLoan = (address, loanType, amount) => {
-  if (Web3) {
-    const web3 = new Web3(new Web3.providers.HttpProvider(httpProvider));
-    const contract = new web3.eth.Contract(contractAbi, contractAddr);
-    return contract.methods
-      .requestLoan(loanType, amount)
-      .send({ from: address, gas: gasLimit });
-  } else {
-    console.error("cannot find web3");
-  }
+  return contract.methods
+    .requestLoan(loanType, amount)
+    .send({ from: address, gas: gasLimit });
 };
 
 export const requestDocument = (
@@ -1091,161 +1058,71 @@ export const requestDocument = (
   requestingDocs,
   bankName
 ) => {
-  if (Web3) {
-    const web3 = new Web3(new Web3.providers.HttpProvider(httpProvider));
-    const contract = new web3.eth.Contract(contractAbi, contractAddr);
-    return contract.methods
-      .requestDocument(loanReqId, requestingDocs, bankName)
-      .send({ from: address, gas: gasLimit });
-  } else {
-    console.error("cannot find web3");
-  }
+  return contract.methods
+    .requestDocument(loanReqId, requestingDocs, bankName)
+    .send({ from: address, gas: gasLimit });
 };
 
 export const cancelRequest = (address, id) => {
-  if (Web3) {
-    const web3 = new Web3(new Web3.providers.HttpProvider(httpProvider));
-    const contract = new web3.eth.Contract(contractAbi, contractAddr);
-    return contract.methods
-      .cancelRequest(id)
-      .send({ from: address, gas: gasLimit });
-  } else {
-    console.error("cannot find web3");
-  }
+  return contract.methods
+    .cancelRequest(id)
+    .send({ from: address, gas: gasLimit });
 };
 
 export const cancelDocumentRequest = (address, id) => {
-  if (Web3) {
-    const web3 = new Web3(new Web3.providers.HttpProvider(httpProvider));
-    const contract = new web3.eth.Contract(contractAbi, contractAddr);
-    return contract.methods
-      .cancelDocumentRequest(id)
-      .send({ from: address, gas: gasLimit });
-  } else {
-    console.error("cannot find web3");
-  }
+  return contract.methods
+    .cancelDocumentRequest(id)
+    .send({ from: address, gas: gasLimit });
 };
 
 export const numOfMyRequests = address => {
-  if (Web3) {
-    const web3 = new Web3(new Web3.providers.HttpProvider(httpProvider));
-    const contract = new web3.eth.Contract(contractAbi, contractAddr);
-    return contract.methods.numOfMyRequests().call({ from: address });
-  } else {
-    console.error("cannot find web3");
-  }
+  return contract.methods.numOfMyRequests().call({ from: address });
 };
 
 export const numOfMyBankRequests = address => {
-  if (Web3) {
-    const web3 = new Web3(new Web3.providers.HttpProvider(httpProvider));
-    const contract = new web3.eth.Contract(contractAbi, contractAddr);
-    return contract.methods.numOfMyBankRequests().call({ from: address });
-  } else {
-    console.error("cannot find web3");
-  }
+  return contract.methods.numOfMyBankRequests().call({ from: address });
 };
 
 export const numOfAllRequests = () => {
-  if (Web3) {
-    const web3 = new Web3(new Web3.providers.HttpProvider(httpProvider));
-    const contract = new web3.eth.Contract(contractAbi, contractAddr);
-    return contract.methods.numOfAllRequests().call();
-  } else {
-    console.error("cannot find web3");
-  }
+  return contract.methods.numOfAllRequests().call();
 };
 
 export const numOfAllBankRequests = () => {
-  if (Web3) {
-    const web3 = new Web3(new Web3.providers.HttpProvider(httpProvider));
-    const contract = new web3.eth.Contract(contractAbi, contractAddr);
-    return contract.methods.numOfAllBankRequests().call();
-  } else {
-    console.error("cannot find web3");
-  }
+  return contract.methods.numOfAllBankRequests().call();
 };
 
 export const myRequestAt = (address, id) => {
-  if (Web3) {
-    const web3 = new Web3(new Web3.providers.HttpProvider(httpProvider));
-    const contract = new web3.eth.Contract(contractAbi, contractAddr);
-    return contract.methods.myRequestAt(id).call({ from: address });
-  } else {
-    console.error("cannot find web3");
-  }
+  return contract.methods.myRequestAt(id).call({ from: address });
 };
 
 export const myBankRequestAt = (address, id) => {
-  if (Web3) {
-    const web3 = new Web3(new Web3.providers.HttpProvider(httpProvider));
-    const contract = new web3.eth.Contract(contractAbi, contractAddr);
-    return contract.methods.myBankRequestAt(id).call({ from: address });
-  } else {
-    console.error("cannot find web3");
-  }
+  return contract.methods.myBankRequestAt(id).call({ from: address });
 };
 
 export const requestAt = id => {
-  if (Web3) {
-    const web3 = new Web3(new Web3.providers.HttpProvider(httpProvider));
-    const contract = new web3.eth.Contract(contractAbi, contractAddr);
-    return contract.methods.requestAt(id).call();
-  } else {
-    console.error("cannot find web3");
-  }
+  return contract.methods.requestAt(id).call();
 };
 
 export const bankRequestAt = id => {
-  if (Web3) {
-    const web3 = new Web3(new Web3.providers.HttpProvider(httpProvider));
-    const contract = new web3.eth.Contract(contractAbi, contractAddr);
-    return contract.methods.bankRequestAt(id).call();
-  } else {
-    console.error("cannot find web3");
-  }
+  return contract.methods.bankRequestAt(id).call();
 };
 
 export const getDocumentsByLoanReqId = (loanReqId, id) => {
-  if (Web3) {
-    const web3 = new Web3(new Web3.providers.HttpProvider(httpProvider));
-    const contract = new web3.eth.Contract(contractAbi, contractAddr);
-    return contract.methods.getDocumentsByLRId(loanReqId, id).call();
-  } else {
-    console.error("cannot find web3");
-  }
+  return contract.methods.getDocumentsByLRId(loanReqId, id).call();
 };
 
 export const getDocumentsLength = loanReqId => {
-  if (Web3) {
-    const web3 = new Web3(new Web3.providers.HttpProvider(httpProvider));
-    const contract = new web3.eth.Contract(contractAbi, contractAddr);
-    return contract.methods.getDocumentsLength(loanReqId).call();
-  } else {
-    console.error("cannot find web3");
-  }
+  return contract.methods.getDocumentsLength(loanReqId).call();
 };
 
 export const acceptDocReq = (address, loanReqId, id) => {
-  if (Web3) {
-    const web3 = new Web3(new Web3.providers.HttpProvider(httpProvider));
-    const contract = new web3.eth.Contract(contractAbi, contractAddr);
-    return contract.methods
-      .accept(loanReqId, id)
-      .send({ from: address, gas: gasLimit });
-  } else {
-    console.error("cannot find web3");
-  }
+  return contract.methods
+    .accept(loanReqId, id)
+    .send({ from: address, gas: gasLimit });
 };
 
 export const rejectDocReq = (address, loanReqId, id) => {
-  if (Web3) {
-    const web3 = new Web3(new Web3.providers.HttpProvider(httpProvider));
-    const contract = new web3.eth.Contract(contractAbi, contractAddr);
-    return contract.methods
-      .reject(loanReqId, id)
-      .send({ from: address, gas: gasLimit });
-  } else {
-    console.error("cannot find web3");
-  }
+  return contract.methods
+    .reject(loanReqId, id)
+    .send({ from: address, gas: gasLimit });
 };
