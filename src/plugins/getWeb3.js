@@ -1076,7 +1076,7 @@ export const requestDocument = (
     const web3 = new Web3(new Web3.providers.HttpProvider(httpProvider));
     const contract = new web3.eth.Contract(contractAbi, contractAddr);
     return contract.methods
-      .requestLoan(loanReqId, requestingDocs, bankName)
+      .requestDocument(loanReqId, requestingDocs, bankName)
       .send({ from: address, gas: 300000 });
   } else {
     console.error("cannot find web3");

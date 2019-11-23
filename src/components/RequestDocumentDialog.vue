@@ -7,12 +7,16 @@
       <v-card-title>Document Detail</v-card-title>
       <v-divider></v-divider>
       <v-card-text>
-        <DocumentRequesstForm />
+        <DocumentRequestForm
+          :loanType="req.loanType"
+          :amount="req.amount"
+          :documents="documents"
+        />
       </v-card-text>
       <v-divider></v-divider>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
+        <v-btn color="blue darken-1" text @click="clearInput">Close</v-btn>
         <v-btn color="blue darken-1" text @click="onSubmit">Submit</v-btn>
       </v-card-actions>
     </v-card>
@@ -20,19 +24,61 @@
 </template>
 
 <script>
-import DocumentRequesstForm from "@/components/DocumentRequesstForm";
+import _ from "lodash";
+import { requestDocument } from "../plugins/getWeb3";
+import DocumentRequestForm from "@/components/DocumentRequestForm";
 export default {
   components: {
-    DocumentRequesstForm
+    DocumentRequestForm
+  },
+  props: {
+    req: Object
   },
   data() {
     return {
-      dialog: false
+      dialog: false,
+      documents: [
+        {
+          label: "National Identity Card",
+          name: "national-id-card",
+          checked: false,
+          copies: 1
+        },
+        {
+          label: "House Particular",
+          name: "house-particular",
+          checked: false,
+          copies: 1
+        }
+      ]
     };
   },
   methods: {
+    clearInput() {
+      this.documents = [
+        {
+          label: "National Identity Card",
+          name: "national-id-card",
+          checked: false,
+          copies: 1
+        },
+        {
+          label: "House Particular",
+          name: "house-particular",
+          checked: false,
+          copies: 1
+        }
+      ];
+      this.dialog = false;
+    },
     onSubmit() {
-      console.log("Submit form");
+      const tmp = _.filter(this.documents, doc => doc.checked).map(doc => ({
+        name: doc.name,
+        copies: doc.copies
+      }));
+      const user = this.$store.getters.user;
+      requestDocument(user.wallet.address, this.req.id, JSON.stringify(tmp), user.fullname);
+      this.clearInput();
     }
   }
 };
