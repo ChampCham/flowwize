@@ -130,7 +130,6 @@ export default {
   },
   methods: {
     login() {
-      this.loading = true;
       this.$store
         .dispatch("logIn", {
           email: this.email,
@@ -139,11 +138,9 @@ export default {
         })
         .then(() => {
           if (this.error === null) {
-            console.log(this.error);
             this.onClear();
             this.$router.push({ path: "/request" });
           }
-          this.loading = false;
         });
     },
     signup() {

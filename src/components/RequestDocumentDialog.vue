@@ -7,7 +7,11 @@
       <v-card-title>Document Detail</v-card-title>
       <v-divider></v-divider>
       <v-card-text>
-        <DocumentRequestForm :loanType="req.loanType" :amount="req.amount" :documents="documents" />
+        <DocumentRequestForm
+          :loanType="req.loanType"
+          :amount="req.amount"
+          :documents="documents"
+        />
       </v-card-text>
       <v-divider></v-divider>
       <v-card-actions>
@@ -52,7 +56,7 @@ export default {
   },
   computed: {
     isDisabled() {
-      let isDis = false
+      let isDis = false;
       _.forEach(this.disableditems, dis => {
         if (dis === this.req.id) {
           isDis = true;
@@ -91,8 +95,10 @@ export default {
         this.req.id,
         JSON.stringify(tmp),
         user.fullname
-      );
-      this.clearInput();
+      ).then(() => {
+        this.$emit("initialize");
+        this.clearInput();
+      });
     }
   }
 };

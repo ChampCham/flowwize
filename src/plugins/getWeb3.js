@@ -1,10 +1,12 @@
 import Web3 from "web3";
+import _ from "lodash";
+import { db } from "../firebase";
 
 // const httpProvider =
 //   "https://rinkeby.infura.io/v3/230cd6eacddf44d6b6307c70164a1636";
 
 const httpProvider = "ws://127.0.0.1:7545";
-const contractAddr = "0xEb8e73998Fb63CFdE6C5178c27DdCbBF51b47cdB";
+const contractAddr = "0xF401AfaB834FA673fdf3B7126F3f37ADBad8a6EB";
 // const contractAddr = "0xc94929a02Cc197a65AA3D0B31eb9a530Fa534bD4";
 const contractAbi = [
   {
@@ -995,8 +997,22 @@ const contractAbi = [
 const gasLimit = "600000";
 const web3 = new Web3(new Web3.providers.WebsocketProvider(httpProvider));
 const contract = new web3.eth.Contract(contractAbi, contractAddr);
-contract.events.Accept().on("data", data => {
-  console.log(data.returnValues.id);
+contract.events.Accept({ fromBlock: 0 }).on("data", data => {
+  const id = parseInt(data.returnValues.id);
+  console.log(id);
+  bankRequestAt(id).then(dreq => {
+    // const documents = JSON.parse(dreq[3]);
+    requestAt(dreq[2]).then(lreq => {
+      db.collection("users")
+        .where("wallet.address", "==", lreq[1])
+        .get()
+        .then(doc => {
+          _.forEach(doc.docs, d => {
+            console.log(d.id);
+          });
+        });
+    });
+  });
 });
 
 export const createWallet = () => {
@@ -1034,6 +1050,10 @@ export const sendEther = (source, target, amount, key) => {
       gas: gasLimit
     });
   }
+};
+
+export const myBalance = address => {
+  return contract.methods.myBalance().call({ from: address });
 };
 
 export const registerRequester = address => {
@@ -1107,12 +1127,14 @@ export const bankRequestAt = id => {
   return contract.methods.bankRequestAt(id).call();
 };
 
-export const getDocumentsByLoanReqId = (loanReqId, id) => {
-  return contract.methods.getDocumentsByLRId(loanReqId, id).call();
+export const getDocumentsByLoanReqId = (address, loanReqId, id) => {
+  return contract.methods
+    .getDocumentsByLRId(loanReqId, id)
+    .call({ from: address });
 };
 
-export const getDocumentsLength = loanReqId => {
-  return contract.methods.getDocumentsLength(loanReqId).call();
+export const getDocumentsLength = (address, loanReqId) => {
+  return contract.methods.getDocumentsLength(loanReqId).call({ from: address });
 };
 
 export const acceptDocReq = (address, loanReqId, id) => {

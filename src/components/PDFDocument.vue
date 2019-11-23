@@ -42,7 +42,7 @@ export default {
   },
   data() {
     return {
-      scale: 2,
+      scale: 1,
       page: 1,
       numPages: 0,
       pdfdata: undefined,

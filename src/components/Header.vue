@@ -32,6 +32,12 @@
         </router-link>
       </v-toolbar-title>
       <v-spacer></v-spacer>
+      <v-toolbar-items v-if="role === 'bank'" class="hidden-xs-only">
+        <v-btn text>
+          Balance: {{balance}}
+        </v-btn>
+      </v-toolbar-items>
+      <v-spacer></v-spacer>
       <v-toolbar-items class="hidden-xs-only">
         <v-btn text v-for="item in menuItems" :key="item.title" :to="item.path">
           <!-- <v-icon left dark>{{ item.icon }}</v-icon> -->
@@ -46,6 +52,8 @@
 </template>
 
 <script>
+import { myBalance } from "../plugins/getWeb3";
+
 export default {
   name: "App",
   props: {
@@ -54,7 +62,8 @@ export default {
   data() {
     return {
       appTitle: "Flowwize",
-      sidebar: false
+      sidebar: false,
+      balance: 0
     };
   },
   computed: {
@@ -75,6 +84,11 @@ export default {
       }
       return null;
     }
+  },
+  mounted() {
+    myBalance(this.$store.getters.user.wallet.address).then(balance => {
+      this.balance = balance;
+    });
   },
   methods: {
     logOut() {

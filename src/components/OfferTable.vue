@@ -79,26 +79,28 @@ export default {
         this.items = [];
         for (let i = 0; i < len; i++) {
           myRequestAt(user.wallet.address, i).then(lreq => {
-            getDocumentsLength(lreq[0]).then(dlen => {
+            getDocumentsLength(user.wallet.address, lreq[0]).then(dlen => {
               for (let j = 0; j < dlen; j++) {
-                getDocumentsByLoanReqId(lreq[0], j).then(dreq => {
-                  db.collection("users")
-                    .where("wallet.address", "==", dreq[1])
-                    .get()
-                    .then(doc => {
-                      _.forEach(doc.docs, d => {
-                        const record = this.parseItem(
-                          dreq,
-                          lreq,
-                          d.data().fullname,
-                          j
-                        );
-                        if (record.valid !== false) {
-                          this.items.push(record);
-                        }
+                getDocumentsByLoanReqId(user.wallet.address, lreq[0], j).then(
+                  dreq => {
+                    db.collection("users")
+                      .where("wallet.address", "==", dreq[1])
+                      .get()
+                      .then(doc => {
+                        _.forEach(doc.docs, d => {
+                          const record = this.parseItem(
+                            dreq,
+                            lreq,
+                            d.data().fullname,
+                            j
+                          );
+                          if (record.valid !== false) {
+                            this.items.push(record);
+                          }
+                        });
                       });
-                    });
-                });
+                  }
+                );
               }
             });
           });
@@ -128,10 +130,12 @@ export default {
     acceptOffer(lrId, idx) {
       const user = this.$store.getters.user;
       acceptDocReq(user.wallet.address, lrId, idx);
+      this.initialize();
     },
     rejectOffer(lrId, idx) {
       const user = this.$store.getters.user;
       rejectDocReq(user.wallet.address, lrId, idx);
+      this.initialize();
     }
   }
 };

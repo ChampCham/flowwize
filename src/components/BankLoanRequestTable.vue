@@ -1,13 +1,24 @@
 <template>
-  <v-data-table :headers="headers" :items="items" sort-by="calories" class="elevation-1">
+  <v-data-table
+    :headers="headers"
+    :items="items"
+    sort-by="calories"
+    class="elevation-1"
+  >
     <template v-slot:top>
       <v-toolbar flat color="white">
         <v-toolbar-title>Loan Requests</v-toolbar-title>
       </v-toolbar>
     </template>
-    <template v-slot:item.timestamp="{ item }">{{ formatDate(item.timestamp) }}</template>
+    <template v-slot:item.timestamp="{ item }">{{
+      formatDate(item.timestamp)
+    }}</template>
     <template v-slot:item.action="{ item }">
-      <RequestDialog :req="item" :disableditems="disableditems" />
+      <RequestDialog
+        :req="item"
+        :disableditems="disableditems"
+        @initialize="initialize"
+      />
     </template>
   </v-data-table>
 </template>
@@ -41,7 +52,7 @@ export default {
       { text: "Actions", value: "action", sortable: false }
     ],
     items: [],
-    disableditems:[],
+    disableditems: [],
     bankRequests: []
   }),
   computed: {
@@ -58,7 +69,10 @@ export default {
           myBankRequestAt(this.user.wallet.address, i).then(req => {
             const request = this.parseRequest(req);
             _.forEach(value, item => {
-              if (request.lrId === item.id && !this.disableditems.includes(request.lrId )) {
+              if (
+                request.lrId === item.id &&
+                !this.disableditems.includes(request.lrId)
+              ) {
                 this.disableditems.push(request.lrId);
               }
             });
@@ -87,7 +101,6 @@ export default {
           });
         }
       });
-
     },
     parseItem(data, name) {
       return {

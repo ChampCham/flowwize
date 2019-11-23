@@ -43,7 +43,7 @@
                           <v-icon light>fas fa-spinner</v-icon>
                         </span>
                       </v-btn>
-                      <v-btn block @click="regisRequester"
+                      <v-btn block v-if="false" @click="regisRequester"
                         >Register Requester</v-btn
                       >
                     </v-flex>
