@@ -2,16 +2,16 @@
   <v-container fluid grid-list-xl text-xs-center class="mt-12 pt-5">
     <Header />
     <v-flex lg8 sm12 xs12 offset-lg2>
-      <Table />
+      <OffersTable />
     </v-flex>
   </v-container>
 </template>
 <script>
-import Table from "@/components/Table";
+import OffersTable from "../components/OffersTable";
 import Header from "@/components/Header";
 export default {
   components: {
-    Table,
+    OffersTable,
     Header
   },
   data() {

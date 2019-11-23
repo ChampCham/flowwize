@@ -68,8 +68,8 @@ export default {
           url: null
         },
         {
-          label: "House Identity Card",
-          name: "house-id-card",
+          label: "House Particular",
+          name: "house-particular",
           url: null
         }
       ]
