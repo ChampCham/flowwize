@@ -8,6 +8,16 @@
     <template v-slot:item.timestamp="{ item }">
       {{ formatDate(item.timestamp) }}
     </template>
+    <template v-slot:item.links="{ item }">
+      <v-layout v-if="item.links" column>
+        <a v-for="k in Object.keys(item.links)" :key="k" :href="item.links[k]">
+          {{ k }}
+        </a>
+      </v-layout>
+      <v-layout v-else>
+        No Permission
+      </v-layout>
+    </template>
     <template v-slot:item.documents="{ item }">
       <v-list-item v-for="doc in item.documents" :key="doc.id">
         <v-list-item-content>
@@ -23,6 +33,7 @@
 
 <script>
 import _ from "lodash";
+import CryptoJS from "crypto-js";
 import moment from "moment";
 import {
   numOfMyBankRequests,
@@ -39,7 +50,8 @@ export default {
       { text: "Amount", value: "amount" },
       { text: "Request Doc.", value: "documents", sortable: false },
       { text: "Status", value: "status" },
-      { text: "Date", value: "timestamp" }
+      { text: "Date", value: "timestamp" },
+      { text: "Document Links", value: "links" }
     ],
     items: []
   }),
@@ -55,22 +67,38 @@ export default {
         this.items = [];
         for (let i = 0; i < len; i++) {
           myBankRequestAt(bank.wallet.address, i).then(res => {
-            requestAt(res[2]).then(lreq => {
-              db.collection("users")
-                .where("wallet.address", "==", lreq[1])
-                .get()
-                .then(doc => {
-                  _.forEach(doc.docs, d => {
-                    const record = this.parseItem(res, lreq, d.data().fullname);
-                    this.items.push(record);
+            db.collection("users")
+              .where("wallet.address", "==", res[1])
+              .get()
+              .then(ddocs => {
+                _.forEach(ddocs.docs, dd => {
+                  requestAt(res[2]).then(lreq => {
+                    db.collection("users")
+                      .where("wallet.address", "==", lreq[1])
+                      .get()
+                      .then(doc => {
+                        _.forEach(doc.docs, d => {
+                          const record = this.parseItem(
+                            res,
+                            lreq,
+                            d.data().fullname,
+                            dd.data().wallet.privateKey
+                          );
+                          this.items.push(record);
+                        });
+                      });
                   });
                 });
-            });
+              });
           });
         }
       });
     },
-    parseItem(data, req, name) {
+    parseItem(data, req, name, key) {
+      let links = null;
+      if (data[8] && data[8] !== "") {
+        links = JSON.parse(CryptoJS.AES.decrypt(data[8], key).toString(CryptoJS.enc.Utf8));
+      }
       return {
         id: data[0],
         bank: data[1],
@@ -80,6 +108,7 @@ export default {
         bankName: data[5],
         timestamp: data[6],
         status: data[7],
+        links,
         user: req[1],
         loanType: req[2],
         amount: req[3],

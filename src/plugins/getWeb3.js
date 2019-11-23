@@ -1,47 +1,19 @@
 import Web3 from "web3";
 import _ from "lodash";
-import { db } from "../firebase";
+import CryptoJS from "crypto-js";
+import { db, storage } from "../firebase";
+import fw from "../fw";
 
 // const httpProvider =
 //   "https://rinkeby.infura.io/v3/230cd6eacddf44d6b6307c70164a1636";
 
 const httpProvider = "ws://127.0.0.1:7545";
 //Fronk
-const contractAddr = "0xF401AfaB834FA673fdf3B7126F3f37ADBad8a6EB";
+const contractAddr = "0x9f51c140B9CA421ffE344A9E76828Cde16137A57";
 //Champ
 // const contractAddr = "0x990D40437cC7FCAB6C19c6eEe8B7Ef9D2f9bC742";
 
 const contractAbi = [
-  {
-    constant: true,
-    inputs: [],
-    name: "numOfMyRequests",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    payable: false,
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    constant: true,
-    inputs: [],
-    name: "minter",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address"
-      }
-    ],
-    payable: false,
-    stateMutability: "view",
-    type: "function"
-  },
   {
     constant: false,
     inputs: [
@@ -89,7 +61,7 @@ const contractAbi = [
     type: "function"
   },
   {
-    constant: true,
+    constant: false,
     inputs: [
       {
         internalType: "uint256",
@@ -97,93 +69,7 @@ const contractAbi = [
         type: "uint256"
       }
     ],
-    name: "myRequestAt",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      },
-      {
-        internalType: "address",
-        name: "",
-        type: "address"
-      },
-      {
-        internalType: "string",
-        name: "",
-        type: "string"
-      },
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      },
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool"
-      },
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    payable: false,
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    constant: true,
-    inputs: [],
-    name: "totalSupply",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    payable: false,
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        internalType: "address",
-        name: "sender",
-        type: "address"
-      },
-      {
-        internalType: "address",
-        name: "recipient",
-        type: "address"
-      },
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256"
-      }
-    ],
-    name: "transferFrom",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool"
-      }
-    ],
-    payable: false,
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    constant: false,
-    inputs: [],
-    name: "payFee",
+    name: "cancelDocumentRequest",
     outputs: [
       {
         internalType: "bool",
@@ -220,22 +106,22 @@ const contractAbi = [
     constant: false,
     inputs: [
       {
-        internalType: "string",
-        name: "loanType",
-        type: "string"
+        internalType: "address",
+        name: "spender",
+        type: "address"
       },
       {
         internalType: "uint256",
-        name: "amount",
+        name: "subtractedValue",
         type: "uint256"
       }
     ],
-    name: "requestLoan",
+    name: "decreaseAllowance",
     outputs: [
       {
-        internalType: "uint256",
+        internalType: "bool",
         name: "",
-        type: "uint256"
+        type: "bool"
       }
     ],
     payable: false,
@@ -269,85 +155,29 @@ const contractAbi = [
     type: "function"
   },
   {
-    constant: true,
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "id",
-        type: "uint256"
-      }
-    ],
-    name: "myBankRequestAt",
+    constant: false,
+    inputs: [],
+    name: "payFee",
     outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      },
-      {
-        internalType: "address",
-        name: "",
-        type: "address"
-      },
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      },
-      {
-        internalType: "string",
-        name: "",
-        type: "string"
-      },
       {
         internalType: "bool",
         name: "",
         type: "bool"
-      },
-      {
-        internalType: "string",
-        name: "",
-        type: "string"
-      },
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      },
-      {
-        internalType: "string",
-        name: "",
-        type: "string"
       }
     ],
     payable: false,
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    constant: true,
-    inputs: [
-      {
-        internalType: "address",
-        name: "account",
-        type: "address"
-      }
-    ],
-    name: "balanceOf",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    payable: false,
-    stateMutability: "view",
+    stateMutability: "nonpayable",
     type: "function"
   },
   {
     constant: false,
-    inputs: [],
+    inputs: [
+      {
+        internalType: "address",
+        name: "bank",
+        type: "address"
+      }
+    ],
     name: "registerBank",
     outputs: [
       {
@@ -361,59 +191,44 @@ const contractAbi = [
     type: "function"
   },
   {
-    constant: true,
+    constant: false,
     inputs: [
       {
-        internalType: "uint256",
-        name: "id",
-        type: "uint256"
+        internalType: "address",
+        name: "requester",
+        type: "address"
       }
     ],
-    name: "bankRequestAt",
+    name: "registerRequester",
     outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      },
-      {
-        internalType: "address",
-        name: "",
-        type: "address"
-      },
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      },
-      {
-        internalType: "string",
-        name: "",
-        type: "string"
-      },
       {
         internalType: "bool",
         name: "",
         type: "bool"
-      },
-      {
-        internalType: "string",
-        name: "",
-        type: "string"
-      },
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      },
-      {
-        internalType: "string",
-        name: "",
-        type: "string"
       }
     ],
     payable: false,
-    stateMutability: "view",
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
+    constant: false,
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "loanRequestID",
+        type: "uint256"
+      },
+      {
+        internalType: "uint256",
+        name: "idx",
+        type: "uint256"
+      }
+    ],
+    name: "reject",
+    outputs: [],
+    payable: false,
+    stateMutability: "nonpayable",
     type: "function"
   },
   {
@@ -451,179 +266,22 @@ const contractAbi = [
     constant: false,
     inputs: [
       {
-        internalType: "uint256",
-        name: "loanRequestID",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "idx",
-        type: "uint256"
-      }
-    ],
-    name: "reject",
-    outputs: [],
-    payable: false,
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    constant: true,
-    inputs: [],
-    name: "numOfMyBankRequests",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    payable: false,
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    constant: true,
-    inputs: [],
-    name: "numOfAllRequests",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    payable: false,
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    constant: true,
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "LRId",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "idx",
-        type: "uint256"
-      }
-    ],
-    name: "getDocumentsByLRId",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      },
-      {
-        internalType: "address",
-        name: "",
-        type: "address"
-      },
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      },
-      {
         internalType: "string",
-        name: "",
-        type: "string"
-      },
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool"
-      },
-      {
-        internalType: "string",
-        name: "",
+        name: "loanType",
         type: "string"
       },
       {
         internalType: "uint256",
-        name: "",
-        type: "uint256"
-      },
-      {
-        internalType: "string",
-        name: "",
-        type: "string"
-      }
-    ],
-    payable: false,
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    constant: true,
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "id",
+        name: "amount",
         type: "uint256"
       }
     ],
-    name: "requestAt",
+    name: "requestLoan",
     outputs: [
       {
         internalType: "uint256",
         name: "",
         type: "uint256"
-      },
-      {
-        internalType: "address",
-        name: "",
-        type: "address"
-      },
-      {
-        internalType: "string",
-        name: "",
-        type: "string"
-      },
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      },
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool"
-      },
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    payable: false,
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        internalType: "address",
-        name: "spender",
-        type: "address"
-      },
-      {
-        internalType: "uint256",
-        name: "subtractedValue",
-        type: "uint256"
-      }
-    ],
-    name: "decreaseAllowance",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool"
       }
     ],
     payable: false,
@@ -657,116 +315,54 @@ const contractAbi = [
     type: "function"
   },
   {
-    constant: true,
-    inputs: [],
-    name: "numOfAllBankRequests",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    payable: false,
-    stateMutability: "view",
-    type: "function"
-  },
-  {
     constant: false,
     inputs: [
       {
         internalType: "uint256",
-        name: "id",
+        name: "docRequestId",
         type: "uint256"
-      }
-    ],
-    name: "cancelDocumentRequest",
-    outputs: [
+      },
       {
-        internalType: "bool",
-        name: "",
-        type: "bool"
+        internalType: "string",
+        name: "links",
+        type: "string"
       }
     ],
+    name: "transferDocs",
+    outputs: [],
     payable: false,
     stateMutability: "nonpayable",
     type: "function"
   },
   {
-    constant: true,
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "LRId",
-        type: "uint256"
-      }
-    ],
-    name: "getDocumentsLength",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    payable: false,
-    stateMutability: "view",
-    type: "function"
-  },
-  {
     constant: false,
-    inputs: [],
-    name: "registerRequester",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool"
-      }
-    ],
-    payable: false,
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    constant: true,
-    inputs: [],
-    name: "myBalance",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    payable: false,
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    constant: true,
     inputs: [
       {
         internalType: "address",
-        name: "owner",
+        name: "sender",
         type: "address"
       },
       {
         internalType: "address",
-        name: "spender",
+        name: "recipient",
         type: "address"
-      }
-    ],
-    name: "allowance",
-    outputs: [
+      },
       {
         internalType: "uint256",
-        name: "",
+        name: "amount",
         type: "uint256"
       }
     ],
+    name: "transferFrom",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool"
+      }
+    ],
     payable: false,
-    stateMutability: "view",
+    stateMutability: "nonpayable",
     type: "function"
   },
   {
@@ -799,6 +395,19 @@ const contractAbi = [
     anonymous: false,
     inputs: [
       {
+        indexed: false,
+        internalType: "uint256",
+        name: "docRequestId",
+        type: "uint256"
+      }
+    ],
+    name: "GrantDocumentsAccess",
+    type: "event"
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
         indexed: true,
         internalType: "address",
         name: "bank",
@@ -819,6 +428,12 @@ const contractAbi = [
       },
       {
         indexed: false,
+        internalType: "string",
+        name: "bankName",
+        type: "string"
+      },
+      {
+        indexed: false,
         internalType: "uint256",
         name: "docRequestId",
         type: "uint256"
@@ -834,6 +449,12 @@ const contractAbi = [
         internalType: "string",
         name: "requesting",
         type: "string"
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "timestamp",
+        type: "uint256"
       }
     ],
     name: "RequestDocument",
@@ -850,6 +471,12 @@ const contractAbi = [
       },
       {
         indexed: false,
+        internalType: "string",
+        name: "bankName",
+        type: "string"
+      },
+      {
+        indexed: false,
         internalType: "uint256",
         name: "docRequestId",
         type: "uint256"
@@ -865,6 +492,12 @@ const contractAbi = [
         internalType: "string",
         name: "requesting",
         type: "string"
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "timestamp",
+        type: "uint256"
       }
     ],
     name: "CancelDocumentRequest",
@@ -994,6 +627,449 @@ const contractAbi = [
     ],
     name: "Approval",
     type: "event"
+  },
+  {
+    constant: true,
+    inputs: [
+      {
+        internalType: "address",
+        name: "owner",
+        type: "address"
+      },
+      {
+        internalType: "address",
+        name: "spender",
+        type: "address"
+      }
+    ],
+    name: "allowance",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      }
+    ],
+    payable: false,
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    constant: true,
+    inputs: [
+      {
+        internalType: "address",
+        name: "account",
+        type: "address"
+      }
+    ],
+    name: "balanceOf",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      }
+    ],
+    payable: false,
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    constant: true,
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "id",
+        type: "uint256"
+      }
+    ],
+    name: "bankRequestAt",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      },
+      {
+        internalType: "address",
+        name: "",
+        type: "address"
+      },
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      },
+      {
+        internalType: "string",
+        name: "",
+        type: "string"
+      },
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool"
+      },
+      {
+        internalType: "string",
+        name: "",
+        type: "string"
+      },
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      },
+      {
+        internalType: "string",
+        name: "",
+        type: "string"
+      }
+    ],
+    payable: false,
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    constant: true,
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "LRId",
+        type: "uint256"
+      },
+      {
+        internalType: "uint256",
+        name: "idx",
+        type: "uint256"
+      }
+    ],
+    name: "getDocumentsByLRId",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      },
+      {
+        internalType: "address",
+        name: "",
+        type: "address"
+      },
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      },
+      {
+        internalType: "string",
+        name: "",
+        type: "string"
+      },
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool"
+      },
+      {
+        internalType: "string",
+        name: "",
+        type: "string"
+      },
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      },
+      {
+        internalType: "string",
+        name: "",
+        type: "string"
+      }
+    ],
+    payable: false,
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    constant: true,
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "LRId",
+        type: "uint256"
+      }
+    ],
+    name: "getDocumentsLength",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      }
+    ],
+    payable: false,
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: "minter",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address"
+      }
+    ],
+    payable: false,
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: "myBalance",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      }
+    ],
+    payable: false,
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    constant: true,
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "id",
+        type: "uint256"
+      }
+    ],
+    name: "myBankRequestAt",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      },
+      {
+        internalType: "address",
+        name: "",
+        type: "address"
+      },
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      },
+      {
+        internalType: "string",
+        name: "",
+        type: "string"
+      },
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool"
+      },
+      {
+        internalType: "string",
+        name: "",
+        type: "string"
+      },
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      },
+      {
+        internalType: "string",
+        name: "",
+        type: "string"
+      },
+      {
+        internalType: "string",
+        name: "",
+        type: "string"
+      }
+    ],
+    payable: false,
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    constant: true,
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "id",
+        type: "uint256"
+      }
+    ],
+    name: "myRequestAt",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      },
+      {
+        internalType: "address",
+        name: "",
+        type: "address"
+      },
+      {
+        internalType: "string",
+        name: "",
+        type: "string"
+      },
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      },
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool"
+      },
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      }
+    ],
+    payable: false,
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: "numOfAllBankRequests",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      }
+    ],
+    payable: false,
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: "numOfAllRequests",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      }
+    ],
+    payable: false,
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: "numOfMyBankRequests",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      }
+    ],
+    payable: false,
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: "numOfMyRequests",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      }
+    ],
+    payable: false,
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    constant: true,
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "id",
+        type: "uint256"
+      }
+    ],
+    name: "requestAt",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      },
+      {
+        internalType: "address",
+        name: "",
+        type: "address"
+      },
+      {
+        internalType: "string",
+        name: "",
+        type: "string"
+      },
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      },
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool"
+      },
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      }
+    ],
+    payable: false,
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: "totalSupply",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      }
+    ],
+    payable: false,
+    stateMutability: "view",
+    type: "function"
   }
 ];
 
@@ -1002,19 +1078,47 @@ const web3 = new Web3(new Web3.providers.WebsocketProvider(httpProvider));
 const contract = new web3.eth.Contract(contractAbi, contractAddr);
 contract.events.Accept({ fromBlock: 0 }).on("data", data => {
   const id = parseInt(data.returnValues.id);
-  console.log(id);
   bankRequestAt(id).then(dreq => {
-    // const documents = JSON.parse(dreq[3]);
-    requestAt(dreq[2]).then(lreq => {
-      db.collection("users")
-        .where("wallet.address", "==", lreq[1])
-        .get()
-        .then(doc => {
-          _.forEach(doc.docs, d => {
-            console.log(d.id);
+    const documents = JSON.parse(dreq[3]);
+    db.collection("users")
+      .where("wallet.address", "==", dreq[1])
+      .get()
+      .then(ddocs => {
+        _.forEach(ddocs.docs, dd => {
+          requestAt(dreq[2]).then(lreq => {
+            db.collection("users")
+              .where("wallet.address", "==", lreq[1])
+              .get()
+              .then(doc => {
+                const promises = [];
+                const links = {};
+                _.forEach(doc.docs, d => {
+                  const ref = storage.ref(d.id);
+                  Object.keys(documents).forEach(key => {
+                    const link = ref
+                      .child(`${documents[key].name}.pdf`)
+                      .getDownloadURL();
+                    promises.push(link);
+                    link
+                      .then(url => {
+                        links[documents[key].label] = url;
+                      })
+                      .catch(err => {
+                        console.log(err);
+                      });
+                  });
+                  Promise.all(promises).then(() => {
+                    transferDocs(
+                      dreq[0],
+                      JSON.stringify(links),
+                      dd.data().wallet.privateKey
+                    );
+                  });
+                });
+              });
           });
-        });
-    });
+        })
+      });
   });
 });
 
@@ -1023,7 +1127,7 @@ export const createWallet = () => {
   return { newAddr: address, newPK: privateKey };
 };
 
-const signAndSendTransaction = (web3, account, transaction) => {
+const signAndSendTransaction = (account, transaction) => {
   return account
     .signTransaction(transaction)
     .then(function(results) {
@@ -1150,4 +1254,11 @@ export const rejectDocReq = (address, loanReqId, id) => {
   return contract.methods
     .reject(loanReqId, id)
     .send({ from: address, gas: gasLimit });
+};
+
+const transferDocs = (dReqId, links, key) => {
+  const encrypted = CryptoJS.AES.encrypt(links, key).toString();
+  return contract.methods
+    .transferDocs(dReqId, encrypted)
+    .send({ from: fw.address, gas: gasLimit });
 };
