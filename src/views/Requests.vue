@@ -1,20 +1,20 @@
 <template>
   <v-container fluid grid-list-xl text-xs-center class="mt-12 pt-5">
-    <Header />
+    <Header :role="role" />
     <v-flex lg8 sm12 xs12 offset-lg2>
-      <LoanRequestsTable v-if="!loading" />
+      <LoanRequestTable v-if="!loading" />
     </v-flex>
   </v-container>
 </template>
 <script>
-import LoanRequestsTable from "../components/LoanRequestsTable";
+import LoanRequestTable from "@/components/LoanRequestTable";
 import Header from "@/components/Header";
 import { myRequestAt, numOfMyRequests } from "../plugins/getWeb3";
 import { mapGetters } from "vuex";
 
 export default {
   components: {
-    LoanRequestsTable,
+    LoanRequestTable,
     Header
   },
   computed: {
@@ -24,7 +24,8 @@ export default {
     return {
       type: "",
       amount: "",
-      myRequests: []
+      myRequests: [],
+      role: "user"
     };
   },
   mounted() {

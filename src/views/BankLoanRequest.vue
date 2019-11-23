@@ -2,23 +2,23 @@
   <v-container fluid grid-list-xl text-xs-center class="mt-12 pt-5">
     <Header :role="role" />
     <v-flex lg8 sm12 xs12 offset-lg2>
-      <OfferTable />
+      <BankLoanRequestTable />
     </v-flex>
   </v-container>
 </template>
 <script>
-import OfferTable from "@/components/OfferTable";
+import BankLoanRequestTable from "@/components/BankLoanRequestTable";
 import Header from "@/components/Header";
 export default {
   components: {
-    OfferTable,
+    BankLoanRequestTable,
     Header
   },
   data() {
     return {
       type: "",
       amount: "",
-      role: "user"
+      role: "bank"
     };
   },
   methods: {

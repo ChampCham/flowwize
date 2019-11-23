@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header />
+    <Header :role="role" />
     <v-container fluid grid-list-xl text-xs-center class="mt-12 pt-5">
       <v-layout row>
         <v-flex xs10 offset-xs1 sm4 offset-sm4 md4 offset-md4 lg4 offset-lg4>
@@ -69,7 +69,8 @@ export default {
     return {
       types: ["House", "Car", "Business"],
       type: "House",
-      amount: ""
+      amount: "",
+      role: "user"
     };
   },
   methods: {

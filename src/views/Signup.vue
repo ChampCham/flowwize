@@ -15,7 +15,6 @@
               <v-layout row>
                 <v-flex xs12>
                   <h1>Sign Up</h1>
-                  <p>{{ role }}</p>
                 </v-flex>
               </v-layout>
               <form @submit.prevent="onSignup">
@@ -117,9 +116,6 @@ export default {
         ? "Passwords do not match"
         : true;
     }
-  },
-  mounted() {
-    console.log(this.role);
   },
   watch: {
     user(value) {
