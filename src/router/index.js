@@ -45,8 +45,7 @@ const routes = [
   },
   {
     path: "/request",
-    name: "LoanRequest",
-    role: "USER",
+    name: "USER",
     component: LoanRequest,
     meta: {
       requiresAuth: true,
@@ -56,7 +55,6 @@ const routes = [
   {
     path: "/requests",
     name: "Requests",
-    role: "USER",
     component: Requests,
     meta: {
       requiresAuth: true,
@@ -67,7 +65,6 @@ const routes = [
     path: "/offers",
     name: "Offers",
     component: Offers,
-    role: "USER",
     meta: {
       requiresAuth: true,
       requireRoles: ["USER"]
@@ -77,7 +74,6 @@ const routes = [
     path: "/upload",
     name: "Upload",
     component: Upload,
-    role: "USER",
     meta: {
       requiresAuth: true,
       requireRoles: ["USER"]
@@ -85,7 +81,7 @@ const routes = [
   },
   {
     path: "/bankRequest",
-    name: "BankLoanRequest",
+    name: "BANK",
     component: BankLoanRequest,
     role: "BANK",
     meta: {
@@ -97,7 +93,6 @@ const routes = [
     path: "/bankOffer",
     name: "BankOffer",
     component: BankOffer,
-    role: "BANK",
     meta: {
       requiresAuth: true,
       requireRoles: ["BANK"]
@@ -149,13 +144,13 @@ router.beforeEach((to, from, next) => {
               if (_.indexOf(requireRoles, role) > -1) {
                 next();
               } else {
-                next({ role: role });
+                next({ name: role });
               }
             } else {
               next();
             }
           } else if (guest) {
-            next({ role: role });
+            next({ name: role });
           } else {
             next();
           }

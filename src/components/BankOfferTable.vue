@@ -1,5 +1,10 @@
 <template>
-  <v-data-table :headers="headers" :items="users" sort-by="calories" class="elevation-1">
+  <v-data-table
+    :headers="headers"
+    :items="users"
+    sort-by="calories"
+    class="elevation-1"
+  >
     <template v-slot:top>
       <v-toolbar flat color="white">
         <v-toolbar-title>My Offers</v-toolbar-title>
@@ -11,15 +16,16 @@
         small
         :color="getColorByStatus(item.status)"
         text-color="white"
-      >{{ item.status }}</v-chip>
+        >{{ item.status }}</v-chip
+      >
     </template>
     <template v-slot:item.action="{ item }">
       <v-btn color="primary">Done</v-btn>
     </template>
     <template v-slot:item.documents="{ item }">
       <v-list-item v-for="doc in item.documents" :key="doc">
-         <v-list-item-content>
-        <v-list-item-title v-text="doc" class="listItem"></v-list-item-title>
+        <v-list-item-content>
+          <v-list-item-title v-text="doc" class="listItem"></v-list-item-title>
         </v-list-item-content>
       </v-list-item>
     </template>
@@ -60,7 +66,7 @@ export default {
           amount: 6.0,
           type: 24,
           status: 25,
-          documents: ["dsadsdadasd",'adsadsadsadas','asdsadadsad']
+          documents: ["dsadsdadasd", "adsadsadsadas", "asdsadadsad"]
         }
       ];
     },
@@ -78,14 +84,14 @@ export default {
 </script>
 
 <style scoped>
-.listItem{
-  font-size: 10px
+.listItem {
+  font-size: 10px;
 }
-.v-list-item__content{
+.v-list-item__content {
   padding: 5px;
 }
 
-.v-list-item{
-  padding: 0px
+.v-list-item {
+  padding: 0px;
 }
 </style>

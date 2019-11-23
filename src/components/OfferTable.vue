@@ -12,10 +12,10 @@
       {{ formatDate(item.timestamp) }}
     </template>
 
-     <template v-slot:item.documents="{ item }">
+    <template v-slot:item.documents="{ item }">
       <v-list-item v-for="doc in item.documents" :key="doc">
-         <v-list-item-content>
-        <v-list-item-title v-text="doc" class="listItem"></v-list-item-title>
+        <v-list-item-content>
+          <v-list-item-title v-text="doc" class="listItem"></v-list-item-title>
         </v-list-item-content>
       </v-list-item>
     </template>
@@ -46,30 +46,29 @@ export default {
   },
   methods: {
     initialize() {
-     this.items = [
+      this.items = [
         {
           bankName: "Siam Commercial Bank",
-          documents: ['asdssaads','dasdsasdad'],
-          type: 'car',
-          amount: 6.0,
+          documents: ["asdssaads", "dasdsasdad"],
+          type: "car",
+          amount: 6.0
         }
       ];
-    },
-
+    }
   }
 };
 </script>
 
 <style scoped>
-.listItem{
-  font-size: 10px
+.listItem {
+  font-size: 10px;
 }
 
-.v-list-item__content{
+.v-list-item__content {
   padding: 5px;
 }
 
-.v-list-item{
-  padding: 0px
+.v-list-item {
+  padding: 0px;
 }
 </style>

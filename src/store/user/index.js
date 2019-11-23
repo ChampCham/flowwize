@@ -21,7 +21,6 @@ export default {
     }
   },
   mutations: {
-
     setUser: (state, payload) => {
       console.log(payload);
       state.user = payload;
