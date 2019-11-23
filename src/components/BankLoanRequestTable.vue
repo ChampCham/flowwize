@@ -1,20 +1,13 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="items"
-    sort-by="calories"
-    class="elevation-1"
-  >
+  <v-data-table :headers="headers" :items="items" sort-by="calories" class="elevation-1">
     <template v-slot:top>
       <v-toolbar flat color="white">
-        <v-toolbar-title>Loan Requests </v-toolbar-title>
+        <v-toolbar-title>Loan Requests</v-toolbar-title>
       </v-toolbar>
     </template>
-    <template v-slot:item.timestamp="{ item }">
-      {{ formatDate(item.timestamp) }}
-    </template>
+    <template v-slot:item.timestamp="{ item }">{{ formatDate(item.timestamp) }}</template>
     <template v-slot:item.action="{ item }">
-      <RequestDialog :req="item" />
+      <RequestDialog :req="item" :disableditems="disableditems" />
     </template>
   </v-data-table>
 </template>
@@ -23,8 +16,14 @@
 import moment from "moment";
 import _ from "lodash";
 import { db } from "../firebase";
-import { numOfAllRequests, requestAt } from "../plugins/getWeb3";
+import {
+  numOfAllRequests,
+  requestAt,
+  numOfMyBankRequests,
+  myBankRequestAt
+} from "../plugins/getWeb3";
 import RequestDialog from "@/components/RequestDocumentDialog";
+import { mapGetters } from "vuex";
 export default {
   components: {
     RequestDialog
@@ -41,13 +40,35 @@ export default {
       { text: "Date", value: "timestamp" },
       { text: "Actions", value: "action", sortable: false }
     ],
-    items: []
+    items: [],
+    disableditems:[],
+    bankRequests: []
   }),
-
+  computed: {
+    ...mapGetters(["user"])
+  },
   mounted() {
     this.initialize();
   },
+  watch: {
+    items(value) {
+      numOfMyBankRequests(this.user.wallet.address).then(len => {
+        this.bankRequests = [];
+        for (let i = 0; i < len; i++) {
+          myBankRequestAt(this.user.wallet.address, i).then(req => {
+            const request = this.parseRequest(req);
+            console.log(request)
+            _.forEach(value, item => {
+              if (request.lrId === item.id && !this.disableditems.includes(request.lrId )) {
+                this.disableditems.push(request.lrId);
+              }
+            });
+          });
+        }
+      });
 
+    }
+  },
   methods: {
     initialize() {
       numOfAllRequests().then(len => {
@@ -68,6 +89,7 @@ export default {
           });
         }
       });
+
     },
     parseItem(data, name) {
       return {
@@ -78,6 +100,17 @@ export default {
         valid: data[4],
         timestamp: data[5],
         name
+      };
+    },
+    parseRequest(data) {
+      return {
+        id: data[0],
+        bank: data[1],
+        lrId: data[2],
+        documents: JSON.parse(data[3]),
+        valid: data[4],
+        bankName: data[5],
+        timestamp: data[6]
       };
     },
     formatDate(t) {
