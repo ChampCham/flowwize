@@ -5,7 +5,9 @@
       <BankLoanRequestTable />
     </v-flex>
     <v-flex lg8 sm12 xs12 offset-lg2>
-      <v-btn block v-if="false" @click="regisBankRequester">Register Requester</v-btn>
+      <v-btn block v-if="false" @click="regisBankRequester"
+        >Register Requester</v-btn
+      >
     </v-flex>
   </v-container>
 </template>

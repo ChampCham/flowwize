@@ -6,8 +6,11 @@ import { db } from "../firebase";
 //   "https://rinkeby.infura.io/v3/230cd6eacddf44d6b6307c70164a1636";
 
 const httpProvider = "ws://127.0.0.1:7545";
+//Fronk
 const contractAddr = "0xF401AfaB834FA673fdf3B7126F3f37ADBad8a6EB";
-// const contractAddr = "0xc94929a02Cc197a65AA3D0B31eb9a530Fa534bD4";
+//Champ
+// const contractAddr = "0x990D40437cC7FCAB6C19c6eEe8B7Ef9D2f9bC742";
+
 const contractAbi = [
   {
     constant: true,

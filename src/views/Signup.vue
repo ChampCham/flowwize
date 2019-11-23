@@ -101,7 +101,6 @@ import { mapGetters } from "vuex";
 export default {
   data() {
     return {
-      loading: false,
       role: this.$route.params.role,
       email: "",
       fullname: "",

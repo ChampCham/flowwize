@@ -12,9 +12,7 @@
     <v-row justify="center">
       <v-col>
         <pdf :src="url" :page="page" :scale.sync="scale" class="pdf-viewer">
-          <template slot="loading">
-            loading content here...
-          </template>
+          <template slot="loading">loading content here...</template>
         </pdf>
       </v-col>
     </v-row>
@@ -71,9 +69,11 @@ export default {
     },
     zoomIn() {
       this.scale += this.scale < 2 ? 0.1 : 0;
+      // this.scale = Math.round(this.scale * 10) / 10;
     },
     zoomOut() {
       this.scale -= this.scale > 0.2 ? 0.1 : 0;
+      // this.scale = Math.round(this.scale * 10) / 10;
     }
   }
 };

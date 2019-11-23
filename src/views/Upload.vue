@@ -50,7 +50,6 @@
     </v-container>
   </div>
 </template>
-
 <script>
 import _ from "lodash";
 import { storage, fb } from "../firebase";

@@ -44,7 +44,10 @@ export default {
                   .then(() => {
                     commit("setLoading", false);
                     commit("setUser", null);
-                    commit("setError", { message: "user not found" });
+                    commit("setError", {
+                      message:
+                        "There is no user record corresponding to this identifier. The user may in another role."
+                    });
                   });
               } else {
                 commit("setLoading", false);
