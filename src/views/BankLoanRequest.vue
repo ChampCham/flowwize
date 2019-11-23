@@ -26,9 +26,6 @@ export default {
     };
   },
   methods: {
-    submit() {
-      console.log("Submit");
-    },
     regisBankRequester() {
       registerBank(this.$store.getters.user.wallet.address);
     }

@@ -20,11 +20,6 @@ export default {
       amount: "",
       role: "user"
     };
-  },
-  methods: {
-    submit() {
-      console.log("Submit");
-    }
   }
 };
 </script>

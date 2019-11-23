@@ -54,7 +54,6 @@ export default {
             const record = this.parseItem(data);
             if (record.valid !== false) {
               this.items.push(record);
-              console.log(record);
             }
           });
         }
