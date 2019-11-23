@@ -1,17 +1,13 @@
 <template>
   <v-dialog max-width="600px" persistent v-model="dialog">
     <template v-slot:activator="{ on }">
-      <v-btn v-on="on" class="primary">Request</v-btn>
+      <v-btn v-on="on" :disabled="isDisabled" class="primary">Request</v-btn>
     </template>
     <v-card>
       <v-card-title>Document Detail</v-card-title>
       <v-divider></v-divider>
       <v-card-text>
-        <DocumentRequestForm
-          :loanType="req.loanType"
-          :amount="req.amount"
-          :documents="documents"
-        />
+        <DocumentRequestForm :loanType="req.loanType" :amount="req.amount" :documents="documents" />
       </v-card-text>
       <v-divider></v-divider>
       <v-card-actions>
@@ -32,7 +28,8 @@ export default {
     DocumentRequestForm
   },
   props: {
-    req: Object
+    req: Object,
+    disableditems: Array
   },
   data() {
     return {
@@ -52,6 +49,18 @@ export default {
         }
       ]
     };
+  },
+  computed: {
+    isDisabled() {
+      let isDis = false
+      console.log(this.disableditems)
+      _.forEach(this.disableditems, dis => {
+        if (dis === this.req.id) {
+          isDis = true;
+        }
+      });
+      return isDis;
+    }
   },
   methods: {
     clearInput() {
@@ -77,7 +86,12 @@ export default {
         copies: doc.copies
       }));
       const user = this.$store.getters.user;
-      requestDocument(user.wallet.address, this.req.id, JSON.stringify(tmp), user.fullname);
+      requestDocument(
+        user.wallet.address,
+        this.req.id,
+        JSON.stringify(tmp),
+        user.fullname
+      );
       this.clearInput();
     }
   }

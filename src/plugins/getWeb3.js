@@ -4,8 +4,8 @@ import Web3 from "web3";
 //   "https://rinkeby.infura.io/v3/230cd6eacddf44d6b6307c70164a1636";
 
 const httpProvider = "http://127.0.0.1:7545";
-const contractAddr = "0x90a3a4f99b842149E438BEd2bA94E09d486773Fe";
-// const contractAddr = "0xc94929a02Cc197a65AA3D0B31eb9a530Fa534bD4";
+// const contractAddr = "0x90a3a4f99b842149E438BEd2bA94E09d486773Fe";
+const contractAddr = "0xE81BbF9A9B33FEAA0B2DD20e56Ef850F0a0FB630";
 const contractAbi = [
   {
     constant: true,
