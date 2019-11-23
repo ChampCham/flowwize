@@ -54,7 +54,7 @@ const routes = [
   },
   {
     path: "/requests",
-    name: "USER",
+    name: "Requests",
     component: Requests,
     meta: {
       requiresAuth: true,
@@ -63,7 +63,7 @@ const routes = [
   },
   {
     path: "/offers",
-    name: "USER",
+    name: "Offers",
     component: Offers,
     meta: {
       requiresAuth: true,
@@ -72,7 +72,7 @@ const routes = [
   },
   {
     path: "/upload",
-    name: "USER",
+    name: "Upload",
     component: Upload,
     meta: {
       requiresAuth: true,
@@ -83,6 +83,7 @@ const routes = [
     path: "/bankRequest",
     name: "BANK",
     component: BankLoanRequest,
+    role: "BANK",
     meta: {
       requiresAuth: true,
       requireRoles: ["BANK"]
@@ -90,7 +91,7 @@ const routes = [
   },
   {
     path: "/bankOffer",
-    name: "BANK",
+    name: "BankOffer",
     component: BankOffer,
     meta: {
       requiresAuth: true,
@@ -123,7 +124,6 @@ router.beforeEach((to, from, next) => {
       .doc(currentUser.uid)
       .get()
       .then(doc => {
-        console.log(currentUserInfo);
         currentUserInfo = doc.data();
         currentUserInfo.role.toUpperCase();
       })

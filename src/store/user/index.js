@@ -21,7 +21,6 @@ export default {
     }
   },
   mutations: {
-
     setUser: (state, payload) => {
       console.log(payload);
       state.user = payload;
@@ -66,7 +65,6 @@ export default {
         });
     },
     async signUp({ commit }, payload) {
-      console.log(payload);
       commit("setLoading", true);
       commit("clearError");
       await fb
@@ -75,7 +73,7 @@ export default {
         .then(async ({ user }) => {
           const { newAddr, newPK } = createWallet();
           const newUser = {
-            username: payload.username,
+            fullname: payload.fullname,
             role: payload.role,
             wallet: {
               address: newAddr,
@@ -107,7 +105,7 @@ export default {
     autoSignIn({ commit }, payload) {
       const newUser = {
         id: payload.uid,
-        username: "default"
+        fullname: "default"
       };
       commit("setUser", newUser);
     },

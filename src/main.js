@@ -20,13 +20,10 @@ fb.auth().onAuthStateChanged(user => {
     app = new Vue({
       render: h => h(App),
       created() {
-        console.log(user);
         if (user) {
           this.$store.dispatch("autoSignIn", user);
           this.$store.dispatch("fetchUserData");
         }
-        // this.$store.dispatch('loadImage');
-        // this.$store.dispatch('loadUsers');
       },
       vuetify,
       router,

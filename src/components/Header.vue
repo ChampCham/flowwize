@@ -83,7 +83,6 @@ export default {
           type: "logOut"
         })
         .then(() => {
-          console.log("dsadasdsa");
           this.$router.replace("/login");
         });
     }

@@ -33,11 +33,11 @@
                 <v-layout row>
                   <v-flex xs12>
                     <v-text-field
-                      name="username"
-                      label="Username"
-                      id="username"
-                      v-model="username"
-                      type="username"
+                      name="fullname"
+                      label="Fullname"
+                      id="fullname"
+                      v-model="fullname"
+                      type="fullname"
                       required
                     ></v-text-field>
                   </v-flex>
@@ -104,7 +104,7 @@ export default {
       loading: false,
       role: this.$route.params.role,
       email: "",
-      username: "",
+      fullname: "",
       password: "",
       confirmPassword: ""
     };
@@ -131,7 +131,7 @@ export default {
         this.$store.dispatch({
           type: "signUp",
           email: this.email,
-          username: this.username,
+          fullname: this.fullname,
           role: this.role,
           password: this.password
         });
