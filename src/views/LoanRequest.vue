@@ -43,9 +43,6 @@
                           <v-icon light>fas fa-spinner</v-icon>
                         </span>
                       </v-btn>
-                      <v-btn block v-if="false" @click="regisRequester"
-                        >Register Requester</v-btn
-                      >
                     </v-flex>
                   </v-layout>
                 </v-form>
@@ -59,7 +56,7 @@
 </template>
 <script>
 import Header from "@/components/Header";
-import { requestLoan, registerRequester } from "../plugins/getWeb3";
+import { requestLoan } from "../plugins/getWeb3";
 
 export default {
   components: {
@@ -74,15 +71,8 @@ export default {
     };
   },
   methods: {
-    regisRequester() {
-      registerRequester(this.$store.getters.user.wallet.address);
-    },
     submit() {
-      requestLoan(
-        this.$store.getters.user.wallet.address,
-        this.type,
-        this.amount
-      );
+      requestLoan(this.$store.getters.user.wallet, this.type, this.amount);
       this.type = "";
       this.amount = "";
     }

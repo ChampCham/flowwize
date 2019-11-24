@@ -91,7 +91,7 @@ export default {
       }));
       const user = this.$store.getters.user;
       requestDocument(
-        user.wallet.address,
+        user.wallet,
         this.req.id,
         JSON.stringify(tmp),
         user.fullname

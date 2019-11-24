@@ -63,10 +63,10 @@ export default {
   methods: {
     initialize() {
       const bank = this.$store.getters.user;
-      numOfMyBankRequests(bank.wallet.address).then(len => {
+      numOfMyBankRequests(bank.wallet).then(len => {
         this.items = [];
         for (let i = 0; i < len; i++) {
-          myBankRequestAt(bank.wallet.address, i).then(res => {
+          myBankRequestAt(bank.wallet, i).then(res => {
             db.collection("users")
               .where("wallet.address", "==", res[1])
               .get()
@@ -97,7 +97,9 @@ export default {
     parseItem(data, req, name, key) {
       let links = null;
       if (data[8] && data[8] !== "") {
-        links = JSON.parse(CryptoJS.AES.decrypt(data[8], key).toString(CryptoJS.enc.Utf8));
+        links = JSON.parse(
+          CryptoJS.AES.decrypt(data[8], key).toString(CryptoJS.enc.Utf8)
+        );
       }
       return {
         id: data[0],

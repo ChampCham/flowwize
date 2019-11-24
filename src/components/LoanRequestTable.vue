@@ -47,10 +47,10 @@ export default {
   },
   methods: {
     initialize() {
-      numOfMyRequests(this.$store.getters.user.wallet.address).then(len => {
+      numOfMyRequests(this.$store.getters.user.wallet).then(len => {
         this.items = [];
         for (let i = 0; i < len; i++) {
-          myRequestAt(this.$store.getters.user.wallet.address, i).then(data => {
+          myRequestAt(this.$store.getters.user.wallet, i).then(data => {
             const record = this.parseItem(data);
             if (record.valid !== false) {
               this.items.push(record);
@@ -72,7 +72,7 @@ export default {
       return moment(`${t}000`, "x").format("Do MMMM YYYY, h:mm:ss a");
     },
     cancelReq(id) {
-      cancelRequest(this.$store.getters.user.wallet.address, id).then(() => {
+      cancelRequest(this.$store.getters.user.wallet, id).then(() => {
         this.initialize();
       });
     }

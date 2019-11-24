@@ -4,12 +4,12 @@ import CryptoJS from "crypto-js";
 import { db, storage } from "../firebase";
 import fw from "../fw";
 
-// const httpProvider =
-//   "https://rinkeby.infura.io/v3/230cd6eacddf44d6b6307c70164a1636";
+const httpProvider =
+  "wss://rinkeby.infura.io/ws/v3/cc3e482b63d0469fb4d4e72c6f2eacd4";
 
-const httpProvider = "ws://127.0.0.1:7545";
+// const httpProvider = "ws://127.0.0.1:7545";
 //Fronk
-const contractAddr = "0x9f51c140B9CA421ffE344A9E76828Cde16137A57";
+const contractAddr = "0x03b21eF1A36EE65CD10E5532CcB938D4451bAE0f";
 //Champ
 // const contractAddr = "0x990D40437cC7FCAB6C19c6eEe8B7Ef9D2f9bC742";
 
@@ -1075,8 +1075,9 @@ const contractAbi = [
 
 const gasLimit = "600000";
 const web3 = new Web3(new Web3.providers.WebsocketProvider(httpProvider));
+web3.eth.net.getId().then(console.log);
 const contract = new web3.eth.Contract(contractAbi, contractAddr);
-contract.events.Accept({ fromBlock: 0 }).on("data", data => {
+contract.events.Accept().on("data", data => {
   const id = parseInt(data.returnValues.id);
   bankRequestAt(id).then(dreq => {
     const documents = JSON.parse(dreq[3]);
@@ -1109,15 +1110,15 @@ contract.events.Accept({ fromBlock: 0 }).on("data", data => {
                   });
                   Promise.all(promises).then(() => {
                     transferDocs(
+                      dd.data().wallet,
                       dreq[0],
-                      JSON.stringify(links),
-                      dd.data().wallet.privateKey
+                      JSON.stringify(links)
                     );
                   });
                 });
               });
           });
-        })
+        });
       });
   });
 });
@@ -1132,7 +1133,7 @@ const signAndSendTransaction = (account, transaction) => {
     .signTransaction(transaction)
     .then(function(results) {
       if ("rawTransaction" in results) {
-        web3.eth
+        return web3.eth
           .sendSignedTransaction(results.rawTransaction)
           .then(receipt => {
             console.log(receipt);
@@ -1150,7 +1151,7 @@ export const sendEther = (source, target, amount, key) => {
   if (account.address !== source) {
     console.error("Key mismatch!");
   } else {
-    signAndSendTransaction(web3, account, {
+    signAndSendTransaction(account, {
       from: source,
       to: target,
       value: web3.utils.toWei(amount, "ether"),
@@ -1159,55 +1160,91 @@ export const sendEther = (source, target, amount, key) => {
   }
 };
 
-export const myBalance = address => {
-  return contract.methods.myBalance().call({ from: address });
+export const myBalance = wallet => {
+  return contract.methods.myBalance().call({ from: wallet.address });
 };
 
-export const registerRequester = address => {
-  return contract.methods
-    .registerRequester()
-    .send({ from: address, gas: gasLimit });
+export const registerRequester = wallet => {
+  const account = web3.eth.accounts.privateKeyToAccount(fw.privateKey);
+  const encodedABI = contract.methods
+    .registerRequester(wallet.address)
+    .encodeABI();
+  return signAndSendTransaction(account, {
+    from: fw.address,
+    to: contractAddr,
+    gas: gasLimit,
+    data: encodedABI
+  });
 };
 
-export const registerBank = address => {
-  return contract.methods.registerBank().send({ from: address, gas: gasLimit });
+export const registerBank = wallet => {
+  const account = web3.eth.accounts.privateKeyToAccount(fw.privateKey);
+  const encodedABI = contract.methods.registerBank(wallet.address).encodeABI();
+  return signAndSendTransaction(account, {
+    from: fw.address,
+    to: contractAddr,
+    gas: gasLimit,
+    data: encodedABI
+  });
 };
 
-export const requestLoan = (address, loanType, amount) => {
-  return contract.methods
-    .requestLoan(loanType, amount)
-    .send({ from: address, gas: gasLimit });
+export const requestLoan = (wallet, loanType, amount) => {
+  const account = web3.eth.accounts.privateKeyToAccount(wallet.privateKey);
+  const encodedABI = contract.methods.requestLoan(loanType, amount).encodeABI();
+  return signAndSendTransaction(account, {
+    from: wallet.address,
+    to: contractAddr,
+    gas: gasLimit,
+    data: encodedABI
+  });
 };
 
 export const requestDocument = (
-  address,
+  wallet,
   loanReqId,
   requestingDocs,
   bankName
 ) => {
-  return contract.methods
+  const account = web3.eth.accounts.privateKeyToAccount(wallet.privateKey);
+  const encodedABI = contract.methods
     .requestDocument(loanReqId, requestingDocs, bankName)
-    .send({ from: address, gas: gasLimit });
+    .encodeABI();
+  return signAndSendTransaction(account, {
+    from: wallet.address,
+    to: contractAddr,
+    gas: gasLimit,
+    data: encodedABI
+  });
 };
 
-export const cancelRequest = (address, id) => {
-  return contract.methods
-    .cancelRequest(id)
-    .send({ from: address, gas: gasLimit });
+export const cancelRequest = (wallet, id) => {
+  const account = web3.eth.accounts.privateKeyToAccount(wallet.privateKey);
+  const encodedABI = contract.methods.cancelRequest(id).encodeABI();
+  return signAndSendTransaction(account, {
+    from: wallet.address,
+    to: contractAddr,
+    gas: gasLimit,
+    data: encodedABI
+  });
 };
 
-export const cancelDocumentRequest = (address, id) => {
-  return contract.methods
-    .cancelDocumentRequest(id)
-    .send({ from: address, gas: gasLimit });
+export const cancelDocumentRequest = (wallet, id) => {
+  const account = web3.eth.accounts.privateKeyToAccount(wallet.privateKey);
+  const encodedABI = contract.methods.cancelDocumentRequest(id).encodeABI();
+  return signAndSendTransaction(account, {
+    from: wallet.address,
+    to: contractAddr,
+    gas: gasLimit,
+    data: encodedABI
+  });
 };
 
-export const numOfMyRequests = address => {
-  return contract.methods.numOfMyRequests().call({ from: address });
+export const numOfMyRequests = wallet => {
+  return contract.methods.numOfMyRequests().call({ from: wallet.address });
 };
 
-export const numOfMyBankRequests = address => {
-  return contract.methods.numOfMyBankRequests().call({ from: address });
+export const numOfMyBankRequests = wallet => {
+  return contract.methods.numOfMyBankRequests().call({ from: wallet.address });
 };
 
 export const numOfAllRequests = () => {
@@ -1218,12 +1255,12 @@ export const numOfAllBankRequests = () => {
   return contract.methods.numOfAllBankRequests().call();
 };
 
-export const myRequestAt = (address, id) => {
-  return contract.methods.myRequestAt(id).call({ from: address });
+export const myRequestAt = (wallet, id) => {
+  return contract.methods.myRequestAt(id).call({ from: wallet.address });
 };
 
-export const myBankRequestAt = (address, id) => {
-  return contract.methods.myBankRequestAt(id).call({ from: address });
+export const myBankRequestAt = (wallet, id) => {
+  return contract.methods.myBankRequestAt(id).call({ from: wallet.address });
 };
 
 export const requestAt = id => {
@@ -1234,31 +1271,50 @@ export const bankRequestAt = id => {
   return contract.methods.bankRequestAt(id).call();
 };
 
-export const getDocumentsByLoanReqId = (address, loanReqId, id) => {
+export const getDocumentsByLoanReqId = (wallet, loanReqId, id) => {
   return contract.methods
     .getDocumentsByLRId(loanReqId, id)
-    .call({ from: address });
+    .call({ from: wallet.address });
 };
 
-export const getDocumentsLength = (address, loanReqId) => {
-  return contract.methods.getDocumentsLength(loanReqId).call({ from: address });
-};
-
-export const acceptDocReq = (address, loanReqId, id) => {
+export const getDocumentsLength = (wallet, loanReqId) => {
   return contract.methods
-    .accept(loanReqId, id)
-    .send({ from: address, gas: gasLimit });
+    .getDocumentsLength(loanReqId)
+    .call({ from: wallet.address });
 };
 
-export const rejectDocReq = (address, loanReqId, id) => {
-  return contract.methods
-    .reject(loanReqId, id)
-    .send({ from: address, gas: gasLimit });
+export const acceptDocReq = (wallet, loanReqId, id) => {
+  const account = web3.eth.accounts.privateKeyToAccount(wallet.privateKey);
+  const encodedABI = contract.methods.accept(loanReqId, id).encodeABI();
+  return signAndSendTransaction(account, {
+    from: wallet.address,
+    to: contractAddr,
+    gas: gasLimit,
+    data: encodedABI
+  });
 };
 
-const transferDocs = (dReqId, links, key) => {
-  const encrypted = CryptoJS.AES.encrypt(links, key).toString();
-  return contract.methods
+export const rejectDocReq = (wallet, loanReqId, id) => {
+  const account = web3.eth.accounts.privateKeyToAccount(wallet.privateKey);
+  const encodedABI = contract.methods.reject(loanReqId, id).encodeABI();
+  return signAndSendTransaction(account, {
+    from: wallet.address,
+    to: contractAddr,
+    gas: gasLimit,
+    data: encodedABI
+  });
+};
+
+const transferDocs = (wallet, dReqId, links) => {
+  const account = web3.eth.accounts.privateKeyToAccount(fw.privateKey);
+  const encrypted = CryptoJS.AES.encrypt(links, wallet.privateKey).toString();
+  const encodedABI = contract.methods
     .transferDocs(dReqId, encrypted)
-    .send({ from: fw.address, gas: gasLimit });
+    .encodeABI();
+  return signAndSendTransaction(account, {
+    from: wallet.address,
+    to: contractAddr,
+    gas: gasLimit,
+    data: encodedABI
+  });
 };

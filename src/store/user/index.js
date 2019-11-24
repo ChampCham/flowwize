@@ -90,7 +90,7 @@ export default {
               sendEther(fw.address, newUser.wallet.address, "1", fw.privateKey);
             })
             .then(() => {
-              registerRequester(newUser.wallet.address);
+              registerRequester(newUser.wallet);
             });
           commit("setUser", newUser);
           commit("setLoading", false);

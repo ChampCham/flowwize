@@ -63,10 +63,10 @@ export default {
   },
   watch: {
     items(value) {
-      numOfMyBankRequests(this.user.wallet.address).then(len => {
+      numOfMyBankRequests(this.user.wallet).then(len => {
         this.bankRequests = [];
         for (let i = 0; i < len; i++) {
-          myBankRequestAt(this.user.wallet.address, i).then(req => {
+          myBankRequestAt(this.user.wallet, i).then(req => {
             const request = this.parseRequest(req);
             _.forEach(value, item => {
               if (

@@ -92,7 +92,7 @@ export default {
     }
   },
   mounted() {
-    myBalance(this.$store.getters.user.wallet.address).then(balance => {
+    myBalance(this.$store.getters.user.wallet).then(balance => {
       this.balance = balance;
     });
   },
