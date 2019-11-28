@@ -9,11 +9,16 @@
       <template v-slot:top>
         <v-toolbar flat color="white">
           <v-toolbar-title>Loan Offer</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <span class="custom-loader" v-if="isRefresh">
+            <v-icon small @click="initialize">fas fa-sync-alt</v-icon>
+          </span>
+          <v-icon small @click="initialize" v-else>fas fa-sync-alt</v-icon>
         </v-toolbar>
       </template>
-      <template v-slot:no-data>
+      <!-- <template v-slot:no-data>
         <v-btn color="primary" @click="initialize">Reset</v-btn>
-      </template>
+      </template> -->
       <template v-slot:item.timestamp="{ item }">
         {{ formatDate(item.timestamp) }}
       </template>
@@ -166,5 +171,42 @@ export default {
 
 .v-list-item {
   padding: 0px;
+}
+
+.custom-loader {
+  animation: loader 1s infinite;
+  display: flex;
+}
+@-moz-keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@-o-keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>

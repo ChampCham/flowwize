@@ -9,14 +9,19 @@
       <template v-slot:top>
         <v-toolbar flat color="white">
           <v-toolbar-title>Loan Requests</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <span class="custom-loader" v-if="isRefresh">
+            <v-icon small @click="initialize">fas fa-sync-alt</v-icon>
+          </span>
+          <v-icon small @click="initialize" v-else>fas fa-sync-alt</v-icon>
         </v-toolbar>
       </template>
-      <template v-slot:no-data>
+      <!-- <template v-slot:no-data>
         <v-btn color="primary" @click="initialize">Reset</v-btn>
+      </template> -->
+      <template v-slot:item.timestamp="{ item }">
+        {{ formatDate(item.timestamp) }}
       </template>
-      <template v-slot:item.timestamp="{ item }">{{
-        formatDate(item.timestamp)
-      }}</template>
       <template v-slot:item.actions="{ item }">
         <v-btn :disabled="!item.valid" @click="cancelReq(item.id)"
           >Cancel</v-btn
@@ -44,13 +49,15 @@ export default {
       { text: "Actions", value: "actions" }
     ],
     title: "My Requests",
-    items: []
+    items: [],
+    isRefresh: false
   }),
   mounted() {
     this.initialize();
   },
   methods: {
     initialize() {
+      this.isRefresh = true;
       numOfMyRequests(this.$store.getters.user.wallet.address).then(len => {
         this.items = [];
         for (let i = 0; i < len; i++) {
@@ -62,6 +69,7 @@ export default {
           });
         }
       });
+      this.isRefresh = false;
     },
     parseItem(data) {
       return {
@@ -90,5 +98,42 @@ export default {
   align-content: center;
   justify-content: center;
   margin-top: 30px;
+}
+
+.custom-loader {
+  animation: loader 1s infinite;
+  display: flex;
+}
+@-moz-keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@-o-keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>
