@@ -1,15 +1,15 @@
 <template>
   <div id="landing-page">
-    <v-container fluid grid-list-xl text-xs-center class="mt-1 pt-5">
-      <v-layout row v-if="error">
-        <v-flex xs10 offset-xs1 sm4 offset-sm4 md4 offset-md4>
+    <v-container fluid grid-list-xl text-xs-center class="pt-5">
+      <v-layout justify-center  row v-if="error">
+        <v-flex xs12 sm4 md4 lg3>
           <v-alert dismissible type="error" @click="onClear">
             {{ error.message }}
           </v-alert>
         </v-flex>
       </v-layout>
-      <v-layout row>
-        <v-flex xs12 sm4 offset-sm4 md4 offset-md4>
+      <v-layout justify-center  row>
+        <v-flex xs12 sm4 md4 lg3>
           <v-card>
             <v-card-text>
               <v-container>
