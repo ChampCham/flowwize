@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <Header :role="role" />
     <v-container class="mt-12">
       <v-card>
@@ -32,16 +32,14 @@
                 />
                 <v-layout column v-if="doc.url !== null">
                   Download PDF File
-                  <a class="ml-2" target="_blank" :href="doc.url">
-                    here
-                  </a>
+                  <a class="ml-2" target="_blank" :href="doc.url">here</a>
                   <PDFDocument :url="doc.url" />
                 </v-layout>
                 <h1 v-else>File not yet uploaded</h1>
-                <v-btn block class="mt-2" @click="upload(doc.name)"
-                  >{{ doc.url === null ? `Upload` : `Update` }}
-                  {{ doc.label }}</v-btn
-                >
+                <v-btn block class="mt-2" @click="upload(doc.name)">
+                  {{ doc.url === null ? `Upload` : `Update` }}
+                  {{ doc.label }}
+                </v-btn>
               </v-layout>
             </v-list-item>
           </v-list-group>
@@ -119,4 +117,10 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.container {
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+}
+</style>

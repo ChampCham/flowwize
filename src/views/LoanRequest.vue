@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <Header :role="role" />
     <v-container fluid grid-list-xl text-xs-center class="mt-12 pt-5">
       <v-layout row>
@@ -91,6 +91,13 @@ export default {
 </script>
 <style scoped>
 @import url("https://fonts.googleapis.com/css?family=Open+Sans|Roboto+Slab&display=swap");
+
+.container {
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  margin-top: 30px;
+}
 .bg {
   background-image: url("/img/login_bg.png");
   background-size: cover;

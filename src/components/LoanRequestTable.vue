@@ -1,25 +1,29 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="items"
-    sort-by="calories"
-    class="elevation-1"
-  >
-    <template v-slot:top>
-      <v-toolbar flat color="white">
-        <v-toolbar-title>Loan Requests</v-toolbar-title>
-      </v-toolbar>
-    </template>
-    <template v-slot:no-data>
-      <v-btn color="primary" @click="initialize">Reset</v-btn>
-    </template>
-    <template v-slot:item.timestamp="{ item }">{{
-      formatDate(item.timestamp)
-    }}</template>
-    <template v-slot:item.actions="{ item }">
-      <v-btn :disabled="!item.valid" @click="cancelReq(item.id)">Cancel</v-btn>
-    </template>
-  </v-data-table>
+  <div class="container">
+    <v-data-table
+      :headers="headers"
+      :items="items"
+      sort-by="calories"
+      class="elevation-1"
+    >
+      <template v-slot:top>
+        <v-toolbar flat color="white">
+          <v-toolbar-title>Loan Requests</v-toolbar-title>
+        </v-toolbar>
+      </template>
+      <template v-slot:no-data>
+        <v-btn color="primary" @click="initialize">Reset</v-btn>
+      </template>
+      <template v-slot:item.timestamp="{ item }">{{
+        formatDate(item.timestamp)
+      }}</template>
+      <template v-slot:item.actions="{ item }">
+        <v-btn :disabled="!item.valid" @click="cancelReq(item.id)"
+          >Cancel</v-btn
+        >
+      </template>
+    </v-data-table>
+  </div>
 </template>
 
 <script>
@@ -79,3 +83,12 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.container {
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  margin-top: 30px;
+}
+</style>

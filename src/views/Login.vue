@@ -1,118 +1,131 @@
 <template>
-  <v-container fluid bg grid-list-xl text-xs-center class="m-auto mt-12 pt-5">
-    <v-layout row v-if="error">
-      <v-flex xs10 offset-xs1 sm4 offset-sm4 md4 offset-md4 lg4 offset-lg4>
-        <v-alert dismissible type="error" @click="onClear">{{
-          error.message
-        }}</v-alert>
-      </v-flex>
-    </v-layout>
-    <v-layout row>
-      <v-flex xs12 sm4 offset-sm4 md4 offset-md4 lg4 offset-lg4>
-        <v-card>
-          <v-card-text>
-            <v-container>
-              <v-layout row>
-                <v-flex xs12>
-                  <h1>Login</h1>
-                </v-flex>
-              </v-layout>
-              <form>
-                <v-tabs
-                  v-model="tab"
-                  fixed-tabs
-                  background-color="#ffffff"
-                  icons-and-text
-                  color="black"
-                  class="tabs"
-                >
-                  <v-tabs-slider></v-tabs-slider>
-                  <v-tab href="#User">
-                    <div class="hidden-sm-and-down">User</div>
-                    <v-icon>fas fa-user</v-icon>
-                  </v-tab>
-                  <v-tab href="#Bank">
-                    <div class="hidden-sm-and-down">Bank</div>
-                    <v-icon>fas fa-university</v-icon>
-                  </v-tab>
-                </v-tabs>
-                <v-tabs-items v-model="tab">
-                  <v-tab-item v-for="i in roles" :key="i" :value="i">
-                    <div>
-                      <v-layout row>
-                        <v-flex xs12>
-                          <v-text-field
-                            name="email"
-                            :label="`${i} Mail`"
-                            id="email"
-                            v-model="email"
-                            type="email"
-                            required
-                          ></v-text-field>
-                        </v-flex>
-                      </v-layout>
-                      <v-layout row>
-                        <v-flex xs12>
-                          <v-text-field
-                            name="password"
-                            label="Password"
-                            id="password"
-                            v-model="password"
-                            type="password"
-                            required
-                          ></v-text-field>
-                        </v-flex>
-                      </v-layout>
+  <div id="landing-page">
+    <v-container fluid bg grid-list-xl text-xs-center class="m-auto mt-12 pt-5">
+      <v-layout row v-if="error">
+        <v-flex xs10 offset-xs1 sm4 offset-sm4 md4 offset-md4 lg4 offset-lg4>
+          <v-alert dismissible type="error" @click="onClear">
+            {{ error.message }}
+          </v-alert>
+        </v-flex>
+      </v-layout>
+      <v-layout row>
+        <v-flex xs12 sm4 offset-sm4 md4 offset-md4 lg3 offset-lg4>
+          <v-card>
+            <v-card-text>
+              <v-container>
+                <v-layout row>
+                  <v-flex xs12>
+                    <h1>Login</h1>
+                  </v-flex>
+                </v-layout>
+                <form>
+                  <v-tabs
+                    v-model="tab"
+                    fixed-tabs
+                    background-color="#ffffff"
+                    icons-and-text
+                    color="#001851"
+                    class="tabs"
+                  >
+                    <v-tabs-slider></v-tabs-slider>
+                    <v-tab class="tab" href="#User">
+                      <div class="hidden-sm-and-down">User</div>
+                      <v-icon>fas fa-user</v-icon>
+                    </v-tab>
+                    <v-tab class="tab" href="#Bank">
+                      <div class="hidden-sm-and-down">Bank</div>
+                      <v-icon>fas fa-university</v-icon>
+                    </v-tab>
+                  </v-tabs>
+                  <v-tabs-items v-model="tab">
+                    <v-tab-item v-for="i in roles" :key="i" :value="i">
+                      <div>
+                        <v-layout row>
+                          <v-flex xs12>
+                            <v-text-field
+                              name="email"
+                              :label="`${i} Mail`"
+                              id="email"
+                              v-model="email"
+                              type="email"
+                              color="#F8C422"
+                              required
+                            ></v-text-field>
+                          </v-flex>
+                        </v-layout>
+                        <v-layout row>
+                          <v-flex xs12>
+                            <v-text-field
+                              name="password"
+                              label="Password"
+                              id="password"
+                              v-model="password"
+                              type="password"
+                              color="#F8C422"
+                              required
+                            ></v-text-field>
+                          </v-flex>
+                        </v-layout>
 
-                      <v-layout row v-if="tab === 'User'">
-                        <v-flex xs6>
-                          <v-btn block @click="signup">
-                            Register
-                            <span slot="loader" class="custom-loader">
-                              <v-icon light>fas fa-spinner</v-icon>
-                            </span>
-                          </v-btn>
-                        </v-flex>
-                        <v-flex xs6>
-                          <v-btn
-                            block
-                            @click="login"
-                            :disabled="loading"
-                            :loading="loading"
-                          >
-                            Log in
-                            <span slot="loader" class="custom-loader">
-                              <v-icon light>fas fa-spinner</v-icon>
-                            </span>
-                          </v-btn>
-                        </v-flex>
-                      </v-layout>
+                        <v-layout row v-if="tab === 'User'">
+                          <v-flex xs6>
+                            <v-btn
+                              block
+                              @click="signup"
+                              outlined
+                              color="#001851"
+                            >
+                              Register
+                              <span slot="loader" class="custom-loader">
+                                <v-icon light>fas fa-spinner</v-icon>
+                              </span>
+                            </v-btn>
+                          </v-flex>
+                          <v-flex xs6>
+                            <v-btn
+                              block
+                              @click="login"
+                              :disabled="loading"
+                              :loading="loading"
+                              outlined
+                              color="#001851"
+                            >
+                              Log in
+                              <span slot="loader" class="custom-loader">
+                                <v-icon light>fas fa-spinner</v-icon>
+                              </span>
+                            </v-btn>
+                          </v-flex>
+                        </v-layout>
 
-                      <v-layout row v-if="tab === 'Bank'">
-                        <v-flex xs12>
-                          <v-btn
-                            block
-                            @click="login"
-                            :disabled="loading"
-                            :loading="loading"
-                          >
-                            Log in
-                            <span slot="loader" class="custom-loader">
-                              <v-icon light>fas fa-spinner</v-icon>
-                            </span>
-                          </v-btn>
-                        </v-flex>
-                      </v-layout>
-                    </div>
-                  </v-tab-item>
-                </v-tabs-items>
-              </form>
-            </v-container>
-          </v-card-text>
-        </v-card>
-      </v-flex>
-    </v-layout>
-  </v-container>
+                        <v-layout row v-if="tab === 'Bank'">
+                          <v-flex xs12>
+                            <v-btn
+                              block
+                              @click="login"
+                              :disabled="loading"
+                              :loading="loading"
+                              outlined
+                              color="#001851"
+                            >
+                              Log in
+                              <span slot="loader" class="custom-loader">
+                                <v-icon light>fas fa-spinner</v-icon>
+                              </span>
+                            </v-btn>
+                          </v-flex>
+                        </v-layout>
+                      </div>
+                    </v-tab-item>
+                  </v-tabs-items>
+                </form>
+              </v-container>
+            </v-card-text>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </div>
 </template>
 <script>
 import { mapGetters } from "vuex";
@@ -154,14 +167,20 @@ export default {
 };
 </script>
 <style scoped>
-@import url("https://fonts.googleapis.com/css?family=Open+Sans|Roboto+Slab&display=swap");
-/* .bg {
-  background-image: url("/img/login_bg.png");
+.tab {
+  color: #001851;
+}
+#landing-page {
+  background-color: #001851;
+  height: 100vh;
+  background-position: center;
+  background-repeat: no-repeat;
   background-size: cover;
-} */
+  position: relative;
+}
 h1 {
   text-align: center;
-  color: black;
+  color: #001851;
   font-family: "Roboto Slab", serif;
   font-size: 40px;
 }

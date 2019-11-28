@@ -1117,7 +1117,7 @@ contract.events.Accept({ fromBlock: 0 }).on("data", data => {
                 });
               });
           });
-        })
+        });
       });
   });
 });

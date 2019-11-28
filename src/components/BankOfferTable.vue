@@ -1,34 +1,37 @@
 <template>
-  <v-data-table :headers="headers" :items="items" class="elevation-1">
-    <template v-slot:top>
-      <v-toolbar flat color="white">
-        <v-toolbar-title>My Offers</v-toolbar-title>
-      </v-toolbar>
-    </template>
-    <template v-slot:item.timestamp="{ item }">
-      {{ formatDate(item.timestamp) }}
-    </template>
-    <template v-slot:item.links="{ item }">
-      <v-layout v-if="item.links" column>
-        <a v-for="k in Object.keys(item.links)" :key="k" :href="item.links[k]">
-          {{ k }}
-        </a>
-      </v-layout>
-      <v-layout v-else>
-        No Permission
-      </v-layout>
-    </template>
-    <template v-slot:item.documents="{ item }">
-      <v-list-item v-for="doc in item.documents" :key="doc.id">
-        <v-list-item-content>
-          <v-list-item-title
-            v-text="`${doc.copies} x ${doc.label}`"
-            class="listItem"
-          ></v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-    </template>
-  </v-data-table>
+  <div class="container">
+    <v-data-table :headers="headers" :items="items" class="elevation-1">
+      <template v-slot:top>
+        <v-toolbar flat color="white">
+          <v-toolbar-title>My Offers</v-toolbar-title>
+        </v-toolbar>
+      </template>
+      <template v-slot:item.timestamp="{ item }">{{
+        formatDate(item.timestamp)
+      }}</template>
+      <template v-slot:item.links="{ item }">
+        <v-layout v-if="item.links" column>
+          <a
+            v-for="k in Object.keys(item.links)"
+            :key="k"
+            :href="item.links[k]"
+            >{{ k }}</a
+          >
+        </v-layout>
+        <v-layout v-else>No Permission</v-layout>
+      </template>
+      <template v-slot:item.documents="{ item }">
+        <v-list-item v-for="doc in item.documents" :key="doc.id">
+          <v-list-item-content>
+            <v-list-item-title
+              v-text="`${doc.copies} x ${doc.label}`"
+              class="listItem"
+            ></v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </template>
+    </v-data-table>
+  </div>
 </template>
 
 <script>
@@ -97,7 +100,9 @@ export default {
     parseItem(data, req, name, key) {
       let links = null;
       if (data[8] && data[8] !== "") {
-        links = JSON.parse(CryptoJS.AES.decrypt(data[8], key).toString(CryptoJS.enc.Utf8));
+        links = JSON.parse(
+          CryptoJS.AES.decrypt(data[8], key).toString(CryptoJS.enc.Utf8)
+        );
       }
       return {
         id: data[0],
@@ -123,6 +128,13 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  margin-top: 30px;
+}
+
 .listItem {
   font-size: 10px;
 }

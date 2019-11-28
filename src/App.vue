@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app id="landing-page">
     <router-view></router-view>
   </v-app>
 </template>
@@ -12,3 +12,13 @@ export default {
   })
 };
 </script>
+<style scoped>
+/* #landing-page {
+  background-color: #001851;
+  height: 100vh;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+} */
+</style>

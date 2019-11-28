@@ -1,50 +1,52 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="items"
-    sort-by="calories"
-    class="elevation-1"
-  >
-    <template v-slot:top>
-      <v-toolbar flat color="white">
-        <v-toolbar-title>Loan Offer</v-toolbar-title>
-      </v-toolbar>
-    </template>
-    <template v-slot:no-data>
-      <v-btn color="primary" @click="initialize">Reset</v-btn>
-    </template>
-    <template v-slot:item.timestamp="{ item }">
-      {{ formatDate(item.timestamp) }}
-    </template>
+  <div class="container">
+    <v-data-table
+      :headers="headers"
+      :items="items"
+      sort-by="calories"
+      class="elevation-1"
+    >
+      <template v-slot:top>
+        <v-toolbar flat color="white">
+          <v-toolbar-title>Loan Offer</v-toolbar-title>
+        </v-toolbar>
+      </template>
+      <template v-slot:no-data>
+        <v-btn color="primary" @click="initialize">Reset</v-btn>
+      </template>
+      <template v-slot:item.timestamp="{ item }">
+        {{ formatDate(item.timestamp) }}
+      </template>
 
-    <template v-slot:item.documents="{ item }">
-      <v-list-item v-for="doc in item.documents" :key="doc.id">
-        <v-list-item-content>
-          <v-list-item-title
-            v-text="`${doc.copies} x ${doc.label}`"
-            class="listItem"
-          ></v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-    </template>
+      <template v-slot:item.documents="{ item }">
+        <v-list-item v-for="doc in item.documents" :key="doc.id">
+          <v-list-item-content>
+            <v-list-item-title
+              v-text="`${doc.copies} x ${doc.label}`"
+              class="listItem"
+            ></v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </template>
 
-    <template v-slot:item.actions="{ item }">
-      <v-btn
-        class="success"
-        :disabled="item.status === 'accepted'"
-        @click="acceptOffer(item.lrId, item.idx)"
-      >
-        Accept
-      </v-btn>
-      <v-btn
-        v-if="item.status !== 'accepted'"
-        class="primary"
-        @click="rejectOffer(item.lrId, item.idx)"
-      >
-        Reject
-      </v-btn>
-    </template>
-  </v-data-table>
+      <template v-slot:item.actions="{ item }">
+        <v-btn
+          class="success"
+          :disabled="item.status === 'accepted'"
+          @click="acceptOffer(item.lrId, item.idx)"
+        >
+          Accept
+        </v-btn>
+        <v-btn
+          v-if="item.status !== 'accepted'"
+          class="primary"
+          @click="rejectOffer(item.lrId, item.idx)"
+        >
+          Reject
+        </v-btn>
+      </template>
+    </v-data-table>
+  </div>
 </template>
 
 <script>
@@ -147,6 +149,13 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  margin-top: 30px;
+}
+
 .listItem {
   font-size: 10px;
 }
