@@ -3,12 +3,24 @@
     <v-data-table :headers="headers" :items="items" class="elevation-1">
       <template v-slot:top>
         <v-toolbar flat color="white">
-          <v-toolbar-title>My Offers</v-toolbar-title>
+          <v-toolbar-title>
+            <h1>My Offers</h1>
+          </v-toolbar-title>
         </v-toolbar>
       </template>
-      <template v-slot:item.timestamp="{ item }">{{
-        formatDate(item.timestamp)
-      }}</template>
+
+      <template v-slot:no-data>
+        <v-progress-linear
+          color="#001851"
+          indeterminate
+          rounded
+          v-if="hasItems"
+        ></v-progress-linear>
+      </template>
+
+      <template v-slot:item.timestamp="{ item }">
+        {{ formatDate(item.timestamp) }}
+      </template>
       <template v-slot:item.links="{ item }">
         <v-layout v-if="item.links" column>
           <a
@@ -56,7 +68,8 @@ export default {
       { text: "Date", value: "timestamp" },
       { text: "Document Links", value: "links" }
     ],
-    items: []
+    items: [],
+    hasItems: true
   }),
 
   created() {
@@ -65,8 +78,12 @@ export default {
 
   methods: {
     initialize() {
+      this.hasItems = true;
       const bank = this.$store.getters.user;
       numOfMyBankRequests(bank.wallet).then(len => {
+        if (len === 0) {
+          this.hasItems = false;
+        }
         this.items = [];
         for (let i = 0; i < len; i++) {
           myBankRequestAt(bank.wallet, i).then(res => {
@@ -128,6 +145,15 @@ export default {
 </script>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css?family=Open+Sans|Roboto+Slab&display=swap");
+
+h1 {
+  text-align: center;
+  color: #001851;
+  font-family: "Roboto Slab", serif;
+  font-size: 30px;
+}
+
 .container {
   align-items: center;
   align-content: center;

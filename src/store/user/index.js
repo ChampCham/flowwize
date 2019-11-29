@@ -87,11 +87,17 @@ export default {
             .doc(user.uid)
             .set(newUser)
             .then(() => {
-              sendEther(fw.address, newUser.wallet.address, "1", fw.privateKey);
+              return sendEther(
+                fw.address,
+                newUser.wallet.address,
+                "1",
+                fw.privateKey
+              );
             })
             .then(() => {
-              registerRequester(newUser.wallet);
+              return registerRequester(newUser.wallet);
             });
+
           commit("setUser", newUser);
           commit("setLoading", false);
         })

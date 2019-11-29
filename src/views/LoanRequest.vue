@@ -20,6 +20,7 @@
                         v-model="type"
                         label="Loan Type"
                         outlined
+                        color="#001851"
                       ></v-select>
                     </v-flex>
                   </v-layout>
@@ -31,13 +32,19 @@
                         id="amount"
                         v-model="amount"
                         type="text"
+                        color="#001851"
                         required
                       ></v-text-field>
                     </v-flex>
                   </v-layout>
                   <v-layout row>
                     <v-flex xs12>
-                      <v-btn block @click="submit">
+                      <v-btn
+                        block
+                        @click="submit"
+                        :disabled="loading"
+                        :loading="loading"
+                      >
                         Submit
                         <span slot="loader" class="custom-loader">
                           <v-icon light>fas fa-spinner</v-icon>
@@ -67,14 +74,21 @@ export default {
       types: ["House", "Car", "Business"],
       type: "House",
       amount: "",
-      role: "user"
+      role: "user",
+      loading: false
     };
   },
   methods: {
-    submit() {
-      requestLoan(this.$store.getters.user.wallet, this.type, this.amount);
+    async submit() {
+      this.loading = true;
+      await requestLoan(
+        this.$store.getters.user.wallet,
+        this.type,
+        this.amount
+      );
       this.type = "";
       this.amount = "";
+      this.loading = false;
     }
   }
 };
@@ -94,9 +108,9 @@ export default {
 }
 h1 {
   text-align: center;
-  color: black;
+  color: #001851;
   font-family: "Roboto Slab", serif;
-  font-size: 35px;
+  font-size: 30px;
 }
 p {
   margin-top: 40px;

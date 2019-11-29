@@ -8,20 +8,36 @@
     >
       <template v-slot:top>
         <v-toolbar flat color="white">
-          <v-toolbar-title>Loan Offer</v-toolbar-title>
+          <v-toolbar-title>
+            <h1>Loan Offer</h1>
+          </v-toolbar-title>
           <v-spacer></v-spacer>
-          <span class="custom-loader" v-if="isRefresh">
-            <v-icon small @click="initialize">fas fa-sync-alt</v-icon>
-          </span>
-          <v-icon small @click="initialize" v-else>fas fa-sync-alt</v-icon>
+          <v-btn
+            text
+            icon
+            @click="initialize"
+            :disabled="isRefresh"
+            :loading="isRefresh"
+          >
+            <v-icon small>fas fa-sync-alt</v-icon>
+            <span slot="loader" class="custom-loader">
+              <v-icon small light>fas fa-sync-alt</v-icon>
+            </span>
+          </v-btn>
         </v-toolbar>
       </template>
-      <!-- <template v-slot:no-data>
-        <v-btn color="primary" @click="initialize">Reset</v-btn>
-      </template> -->
-      <template v-slot:item.timestamp="{ item }">
-        {{ formatDate(item.timestamp) }}
+      <template v-slot:no-data>
+        <v-progress-linear
+          color="#001851"
+          indeterminate
+          rounded
+          v-if="hasItems"
+        ></v-progress-linear>
       </template>
+
+      <template v-slot:item.timestamp="{ item }">{{
+        formatDate(item.timestamp)
+      }}</template>
 
       <template v-slot:item.documents="{ item }">
         <v-list-item v-for="doc in item.documents" :key="doc.id">
@@ -36,18 +52,28 @@
 
       <template v-slot:item.actions="{ item }">
         <v-btn
-          class="success"
+          text
+          color="success"
           :disabled="item.status === 'accepted'"
           @click="acceptOffer(item.lrId, item.idx)"
+          :loading="isLoading && item.status !== 'accepted'"
         >
           Accept
+          <span slot="loader" class="custom-loader">
+            <v-icon small light>fas fa-circle-notch</v-icon>
+          </span>
         </v-btn>
         <v-btn
+          text
           v-if="item.status !== 'accepted'"
-          class="primary"
+          color="primary"
           @click="rejectOffer(item.lrId, item.idx)"
+          :loading="isLoading && item.status !== 'accepted'"
         >
           Reject
+          <span slot="loader" class="custom-loader">
+            <v-icon small light>fas fa-circle-notch</v-icon>
+          </span>
         </v-btn>
       </template>
     </v-data-table>
@@ -79,15 +105,23 @@ export default {
       { text: "Actions", value: "actions" }
     ],
     title: "My Loan Offer",
-    items: []
+    items: [],
+    isRefresh: false,
+    isLoading: false,
+    hasItems: true
   }),
   mounted() {
     this.initialize();
   },
   methods: {
     initialize() {
+      this.isRefresh = true;
+      this.hasItems = true;
       const user = this.$store.getters.user;
       numOfMyRequests(user.wallet).then(len => {
+        if (len === 0) {
+          this.hasItems = false;
+        }
         this.items = [];
         for (let i = 0; i < len; i++) {
           myRequestAt(user.wallet, i).then(lreq => {
@@ -115,6 +149,7 @@ export default {
             });
           });
         }
+        this.isRefresh = false;
       });
     },
     parseItem(data, req, name, idx) {
@@ -137,21 +172,34 @@ export default {
     formatDate(t) {
       return moment(`${t}000`, "x").format("Do MMMM YYYY, h:mm:ss a");
     },
-    acceptOffer(lrId, idx) {
+    async acceptOffer(lrId, idx) {
+      this.isLoading = true;
       const user = this.$store.getters.user;
-      acceptDocReq(user.wallet, lrId, idx);
-      this.initialize();
+      await acceptDocReq(user.wallet, lrId, idx);
+      await this.initialize();
+      this.isLoading = false;
     },
-    rejectOffer(lrId, idx) {
+    async rejectOffer(lrId, idx) {
+      this.isLoading = true;
       const user = this.$store.getters.user;
-      rejectDocReq(user.wallet, lrId, idx);
-      this.initialize();
+      await rejectDocReq(user.wallet, lrId, idx);
+      await this.initialize();
+      this.isLoading = false;
     }
   }
 };
 </script>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css?family=Open+Sans|Roboto+Slab&display=swap");
+
+h1 {
+  text-align: center;
+  color: #001851;
+  font-family: "Roboto Slab", serif;
+  font-size: 30px;
+}
+
 .container {
   align-items: center;
   align-content: center;

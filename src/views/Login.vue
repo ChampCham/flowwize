@@ -3,10 +3,14 @@
     <v-container fluid fill-height grid-list-xl text-xs-center>
       <v-layout justify-center align-center row>
         <v-flex xs12 sm4 md4 lg3>
-          <v-alert value="error" dismissible type="error" @click="onClear" v-if="error" >
-            {{
-            error.message
-            }}
+          <v-alert
+            value="error"
+            dismissible
+            type="error"
+            @click="onClear"
+            v-if="error"
+          >
+            {{ error.message }}
           </v-alert>
           <v-card>
             <v-card-text>
@@ -67,7 +71,12 @@
 
                         <v-layout row v-if="tab === 'User'">
                           <v-flex xs6>
-                            <v-btn block @click="signup" outlined color="#001851">
+                            <v-btn
+                              block
+                              @click="signup"
+                              outlined
+                              color="#001851"
+                            >
                               Register
                               <span slot="loader" class="custom-loader">
                                 <v-icon light>fas fa-spinner</v-icon>

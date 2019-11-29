@@ -1150,8 +1150,9 @@ export const sendEther = (source, target, amount, key) => {
   const account = web3.eth.accounts.privateKeyToAccount(key);
   if (account.address !== source) {
     console.error("Key mismatch!");
+    return;
   } else {
-    signAndSendTransaction(account, {
+    return signAndSendTransaction(account, {
       from: source,
       to: target,
       value: web3.utils.toWei(amount, "ether"),

@@ -1,14 +1,14 @@
 <template>
   <div id="landing-page">
-    <v-container fluid grid-list-xl text-xs-center class="pt-5">
-      <v-layout justify-center  row v-if="error">
+    <v-container fluid fill-height grid-list-xl text-xs-center class="pt-5">
+      <v-layout justify-center align-center row v-if="error">
         <v-flex xs12 sm4 md4 lg3>
           <v-alert dismissible type="error" @click="onClear">
             {{ error.message }}
           </v-alert>
         </v-flex>
       </v-layout>
-      <v-layout justify-center  row>
+      <v-layout justify-center align-center row>
         <v-flex xs12 sm4 md4 lg3>
           <v-card>
             <v-card-text>

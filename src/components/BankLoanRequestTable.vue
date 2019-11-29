@@ -8,12 +8,22 @@
     >
       <template v-slot:top>
         <v-toolbar flat color="white">
-          <v-toolbar-title>Loan Requests</v-toolbar-title>
+          <v-toolbar-title>
+            <h1>Loan Requests</h1>
+          </v-toolbar-title>
         </v-toolbar>
       </template>
-      <template v-slot:item.timestamp="{ item }">
-        {{ formatDate(item.timestamp) }}
+      <template v-slot:no-data>
+        <v-progress-linear
+          color="#001851"
+          indeterminate
+          rounded
+          v-if="hasItems"
+        ></v-progress-linear>
       </template>
+      <template v-slot:item.timestamp="{ item }">{{
+        formatDate(item.timestamp)
+      }}</template>
       <template v-slot:item.action="{ item }">
         <RequestDialog
           :req="item"
@@ -55,7 +65,8 @@ export default {
     ],
     items: [],
     disableditems: [],
-    bankRequests: []
+    bankRequests: [],
+    hasItems: true
   }),
   computed: {
     ...mapGetters(["user"])
@@ -85,7 +96,11 @@ export default {
   },
   methods: {
     initialize() {
+      this.hasItems = true;
       numOfAllRequests().then(len => {
+        if (len === 0) {
+          this.hasItems = false;
+        }
         this.items = [];
         for (let i = 0; i < len; i++) {
           requestAt(i).then(res => {
@@ -134,6 +149,14 @@ export default {
 </script>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css?family=Open+Sans|Roboto+Slab&display=swap");
+
+h1 {
+  text-align: center;
+  color: #001851;
+  font-family: "Roboto Slab", serif;
+  font-size: 30px;
+}
 .container {
   align-items: center;
   align-content: center;

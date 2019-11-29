@@ -1,7 +1,9 @@
 <template>
   <v-dialog max-width="600px" persistent v-model="dialog">
     <template v-slot:activator="{ on }">
-      <v-btn v-on="on" :disabled="isDisabled" class="primary">Request</v-btn>
+      <v-btn v-on="on" :disabled="isDisabled || isSubmit" class="primary"
+        >Request</v-btn
+      >
     </template>
     <v-card>
       <v-card-title>Document Detail</v-card-title>
@@ -17,7 +19,18 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="blue darken-1" text @click="clearInput">Close</v-btn>
-        <v-btn color="blue darken-1" text @click="onSubmit">Submit</v-btn>
+        <v-btn
+          text
+          @click="onSubmit"
+          :disabled="loading"
+          :loading="loading"
+          color="blue darken-1"
+        >
+          Submit
+          <span slot="loader" class="custom-loader">
+            <v-icon color="blue darken-1" light>fas fa-spinner</v-icon>
+          </span>
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -51,7 +64,9 @@ export default {
           checked: false,
           copies: 1
         }
-      ]
+      ],
+      loading: false,
+      isSubmit: false
     };
   },
   computed: {
@@ -84,6 +99,7 @@ export default {
       this.dialog = false;
     },
     onSubmit() {
+      this.loading = true;
       const tmp = _.filter(this.documents, doc => doc.checked).map(doc => ({
         label: doc.label,
         name: doc.name,
@@ -96,10 +112,51 @@ export default {
         JSON.stringify(tmp),
         user.fullname
       ).then(() => {
-        this.$emit("initialize");
+        this.loading = false;
+        this.isSubmit = true;
+        //this.$emit("initialize");
         this.clearInput();
       });
     }
   }
 };
 </script>
+
+<style scoped>
+.custom-loader {
+  animation: loader 1s infinite;
+  display: flex;
+}
+@-moz-keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@-o-keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+</style>

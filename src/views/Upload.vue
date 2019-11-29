@@ -3,7 +3,9 @@
     <Header :role="role" />
     <v-container class="mt-12">
       <v-card>
-        <v-card-title>Documents</v-card-title>
+        <v-card-title>
+          <h1>Documents</h1>
+        </v-card-title>
         <v-list>
           <v-list-group
             v-for="(doc, idx) in documents"
@@ -118,6 +120,15 @@ export default {
 </script>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css?family=Open+Sans|Roboto+Slab&display=swap");
+
+h1 {
+  text-align: center;
+  color: #001851;
+  font-family: "Roboto Slab", serif;
+  font-size: 30px;
+}
+
 .container {
   align-items: center;
   align-content: center;
