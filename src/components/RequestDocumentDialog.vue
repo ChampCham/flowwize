@@ -1,31 +1,19 @@
 <template>
   <v-dialog max-width="600px" persistent v-model="dialog">
     <template v-slot:activator="{ on }">
-      <v-btn v-on="on" :disabled="isDisabled || isSubmit" class="primary"
-        >Request</v-btn
-      >
+      <v-btn v-on="on" :disabled="isDisabled || isSubmit" class="primary">Request</v-btn>
     </template>
     <v-card>
       <v-card-title>Document Detail</v-card-title>
       <v-divider></v-divider>
       <v-card-text>
-        <DocumentRequestForm
-          :loanType="req.loanType"
-          :amount="req.amount"
-          :documents="documents"
-        />
+        <DocumentRequestForm :loanType="req.loanType" :amount="req.amount" :documents="documents" />
       </v-card-text>
       <v-divider></v-divider>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="clearInput">Close</v-btn>
-        <v-btn
-          text
-          @click="onSubmit"
-          :disabled="loading"
-          :loading="loading"
-          color="blue darken-1"
-        >
+        <v-btn color="blue darken-1" text :disabled="loading" @click="clearInput">Close</v-btn>
+        <v-btn text @click="onSubmit" :disabled="loading" :loading="loading" color="blue darken-1">
           Submit
           <span slot="loader" class="custom-loader">
             <v-icon color="blue darken-1" light>fas fa-spinner</v-icon>
@@ -115,6 +103,7 @@ export default {
         this.loading = false;
         this.isSubmit = true;
         //this.$emit("initialize");
+
         this.clearInput();
       });
     }

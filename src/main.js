@@ -4,6 +4,7 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
+import VueSweetalert2 from 'vue-sweetalert2';
 import { fb, db } from "./firebase";
 
 Vue.config.productionTip = false;
@@ -11,6 +12,7 @@ Vue.use(VueFirestore, {
   key: "id", // the name of the property. Default is '.key'.
   enumerable: true //  whether it is enumerable or not. Default is true.
 });
+Vue.use(VueSweetalert2);
 Vue.prototype.$firebase = fb;
 Vue.prototype.$database = db;
 let app = null;
